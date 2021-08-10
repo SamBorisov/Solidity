@@ -1,3 +1,4 @@
 # Solidity
-Learing
-Tuka pisha neshto novo xDDDD
+
+Learing in progress...
+
