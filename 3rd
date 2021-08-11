@@ -1,0 +1,31 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.7.0 <0.9.0;
+
+contract DT {
+    
+    uint public myUint =1; //number >= 0
+    int public myInt =-1; // +-= 0
+    string public myString = "String name"; //tekst v kavichki '/"
+    bool public myBool = true;  // za true ili faulse samo
+    
+    uint public contract myConstant =47 // constanta ne se promenq
+    
+}
+
+
+contract myGame {
+    
+    
+    Player[] public players;
+    
+    
+    struct Player {
+        string firstName;
+        string lastName;
+        
+    }
+    
+    function addPlayer(string memory firstName, string memory lastName) public{
+        players.push(Player(firstName, lastName));
+    }
+}
