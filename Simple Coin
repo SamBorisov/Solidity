@@ -1,42 +1,29 @@
-
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
 
-
-
-
-contract Coin{
-    address public minter;
-    mapping (address => uint) public balances;
+contract Coin {
+    address public develpoer;
+    mapping (address => uint) public stoinost;
     
-    
-    
-    event  Sent (address from, address to, uint amount);
-    
-    
+    event record(address from, address to, uint amount);
     
     constructor(){
-        minter = msg.sender;
+        develpoer = msg.sender;
         
     }
     
-    
-    
-    function mint(address reciver, uint amount) public{
-        require(msg.sender == minter);
+    function create(address receiver, uint amount) public {
+        require(msg.sender == develpoer);
         require(amount < 1e60);
-        balances[reciver] += amount;
+        stoinost[receiver] += amount;
         
-    
     }
     
-    
-    
-    function send(address reciver, uint amount) public {
-        require(amount <= balances[msg.sender], "Insufficent funds");
-        balances[msg.sender] -= amount;
-        balances[reciver] += amount; 
-        emit Sent(msg.sender, reciver, amount);
+    function transaction(address receiver, uint amount) public{
+        require(amount <= stoinost[msg.sender], "Insufficient funds");
+        stoinost[msg.sender] -= amount;
+        stoinost[receiver] += amount;
+        emit record(msg.sender, receiver, amount);
+        
     }
-    
 }
