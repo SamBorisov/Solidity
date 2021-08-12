@@ -1,4 +1,34 @@
 # Solidity
+Syntax:
+Version of solidity-                                    pragma >= 0.?.? <0.?.0;
 
-Learing in progress...
+contract like class-                                    contract ContractName {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
 
