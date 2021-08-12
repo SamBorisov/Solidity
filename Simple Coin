@@ -19,9 +19,9 @@ contract Coin {
         
     }
     
-    function transaction(address receiver, uint amount) public{
-        require(amount <= stoinost[msg.sender], "Insufficient funds");
-        stoinost[msg.sender] -= amount;
+    function transaction(address sender, address receiver, uint amount) public{
+        require(amount <= stoinost[sender], "Insufficient funds");
+        stoinost[sender] -= amount;
         stoinost[receiver] += amount;
         emit record(msg.sender, receiver, amount);
         
