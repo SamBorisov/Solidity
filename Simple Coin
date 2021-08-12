@@ -14,7 +14,7 @@ contract Coin {
     
     function create(address receiver, uint amount) public {
         require(msg.sender == develpoer);
-        require(amount < 1e60);
+        require(amount < 10000);
         stoinost[receiver] += amount;
         
     }
