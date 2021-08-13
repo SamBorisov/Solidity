@@ -8,14 +8,14 @@ contract DT {
     string public myString = "String name"; //tekst v kavichki '/"
     bool public myBool = true;  // za true ili faulse samo
     
-    uint public contanst myConstant =47; // constanta ne se promenq
+    uint public constant myConstant =47; // constanta ne se promenq
     
 }
 
 
 contract myGame {
     
-    
+    uint public playerCount = 0;
     Player[] public players;
     
     
@@ -27,5 +27,6 @@ contract myGame {
     
     function addPlayer(string memory firstName, string memory lastName) public{
         players.push(Player(firstName, lastName));
+        playerCount +=1;
     }
 }
