@@ -8,7 +8,7 @@ contract DT {
     string public myString = "String name"; //tekst v kavichki '/"
     bool public myBool = true;  // za true ili faulse samo
     
-    uint public contract myConstant =47 // constanta ne se promenq
+    uint public contanst myConstant =47 // constanta ne se promenq
     
 }
 
