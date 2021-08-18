@@ -27,7 +27,8 @@ struct Player {                                                     //structor v
 
 function addPlayer(string memory firstName, string memory lastName) public Namemodif{           //funkciq v koqto vikame modifiera , prosto se dobavq imeto sled public 
                                                                                                    //moje nqkolko modifiera prosto pishem space i pishem drugoto ime 
-   
+                                                                                               //moje da v skovi()  da pishem imeto na promenilvata v funk i modiiera da q e qsno
+  
 
 
   function addPlayer(string memory firstName, string memory lastName) public{           //funkciq s koqto svarzvame structorata v skobi i slagame memory da se zapomnqt
