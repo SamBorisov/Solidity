@@ -35,7 +35,7 @@ function addPlayer(string memory firstName, string memory lastName) public Namem
         players.push(Player(firstName, lastName));
         playerCount +=1;
 
-
+}
 
 
 
@@ -79,5 +79,5 @@ modifier: can be used to chnage the behaviour of functions in a declarative way.
 
 
 
-}
+
 
