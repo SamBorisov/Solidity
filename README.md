@@ -39,6 +39,30 @@ function addPlayer(string memory firstName, string memory lastName) public Namem
 
 
 
+                                                                            Key Word
+
+Address: Every account and smart contract has an address. It is used to send and receive Ether from one account to another. You can consider it your public identity on the Blockchain.
+
+Mapping: Data type used to store associations. Similar to a list but holding 2 values, and allow you to quickly get the value corresponding to a key.
+
+Event: When you call an event, it causes the arguments to be stored in transaction's log.
+Emit: keyword used to call Events 
+
+Constructor: function that is run directly when the contract is created.
+
+msg: keyword that allows us to access some special variables that are available for us from the blockchain.
+
+Require: Convenience function in solidity. It guarantees validity of conditions that cannot be detected before execution.
+
+Constant: keyword added to a variable that tells solidity it cannot be changed
+
+struct: Struct types are used to represent a record. That allow you to create your own data type.
+
+enum: Enums restrict a variable to have one of only a few predefined values. The values in this enumerated list are called enums.
+
+arrey: player[] public players;
+
+modifier: can be used to chnage the behaviour of functions in a declarative way. For example you can used a modifier to automatically check a condition prios to exectuing the function.
 
 
 
