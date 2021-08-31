@@ -11,6 +11,7 @@ pragma >= 0.?.? <0.?.0;                                                  //Versi
                     string public myString = "String name";             //tekst v kavichki '/"
                     bool public myBool = true;                         // za true ili faulse samo
                     uint public constant myConstant =47;                    // constanta ne se promenq
+                    bytes32 public mybytes32 = "hello bytes"                   //neshto kato string
     
 }
 
