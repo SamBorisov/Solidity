@@ -58,7 +58,7 @@ Mapping: Data type used to store associations. Similar to a list but holding 2 v
 Event: When you call an event, it causes the arguments to be stored in transaction's log.
 Emit: keyword used to call Events 
 
-Constructor: function that is run directly when the contract is created.
+Constructor: function that is run directly when the contract is created or deplyed in the the blockchain/it can be run once and only once
 
 msg: keyword that allows us to access some special variables that are available for us from the blockchain.
 
