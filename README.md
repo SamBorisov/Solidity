@@ -4,6 +4,8 @@ Syntax:
 pragma >= 0.?.? <0.?.0;                                                  //Version of solidity
 
   contract ContractName {                                                        //Contract like class  
+                    uint8 myUint8 =1;                                      //uint for small fixed numbers
+                    uint256 myUint256=1;                                   //uint for bigger numbers (by default is this)=uint
                     uint public myUint =1;                               //number >= 0
                     int public myInt =-1;                                  // +-= 0
                     string public myString = "String name";             //tekst v kavichki '/"
