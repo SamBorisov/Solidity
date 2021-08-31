@@ -76,6 +76,7 @@ modifier: can be used to chnage the behaviour of functions in a declarative way.
 
 msg.sender: The user that calls this function
 
+super: keyword to add other constructor modifiers you shoud add in the function
 
 
 
