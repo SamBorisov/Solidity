@@ -40,6 +40,13 @@ function addPlayer(string memory firstName, string memory lastName) public Namem
 
 }
 
+    struct Person{                                                                              //druga structora s vikane
+        uint id;
+        string name;
+    }
+    
+    Person public Myid = Person(22,"Sam");
+}
 
 
                                                                             Key Word
