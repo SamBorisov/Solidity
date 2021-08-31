@@ -74,7 +74,7 @@ arrey: player[] public players;
 
 modifier: can be used to chnage the behaviour of functions in a declarative way. For example you can used a modifier to automatically check a condition prios to exectuing the function.
 
-
+msg.sender: The user that calls this function
 
 
 
