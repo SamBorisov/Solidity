@@ -84,7 +84,7 @@ msg.value: if it's payable the eather it sender 1e18 or 1000000...
 
 now: timestamp for the curroent time
 
-
+indexed: The indexed parameters for logged events will allow you to search for these events using the indexed parameters as filters.
 
 
 
