@@ -48,7 +48,7 @@ function addPlayer(string memory firstName, string memory lastName) public Namem
     Person public Myid = Person(22,"Sam");
 }
 
-
+External contracts / is / Cont public externalContract = Cont(address on cont);
                                                                             Key Word
 
 Address: Every account and smart contract has an address. It is used to send and receive Ether from one account to another. You can consider it your public identity on the Blockchain.
@@ -78,7 +78,11 @@ msg.sender: The user that calls this function
 
 super: keyword to add other constructor modifiers you shoud add in the function
 
+msg.sender: the person who call the function
 
+msg.value: if it's payable the eather it sender 1e18 or 1000000...
+
+now: timestamp for the curroent time
 
 
 
