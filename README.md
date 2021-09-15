@@ -42,7 +42,8 @@ external - Cannot be accessed internally, only externally
 
 internal - only this contract and contracts deriving from it can access
 
-private - can be accessed only from this contract
+private - can be accessed only from this contract - default variables (all data on blockchain is public so it's not so private)
+You either don’t put private data on the blockchain, or you put hashes.
 
                                            Interview
 
@@ -68,7 +69,11 @@ State variables vs local variables - State variables are persisted on the blockc
               uint b; //local variable
          }
         }
-
+3 data types we used often - uint addres and string , 2 container types - array and mapping
+How to declare a mapping of address to mapping of address to booleans (nested mapping)
+     mapping(address => mapping(address => bool)) a;
+     
+     25?
 
 
 
