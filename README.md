@@ -1,54 +1,4 @@
-# Solidity
-Syntax:
-    
-pragma >= 0.?.? <0.?.0;                                                  //Version of solidity
 
-  contract ContractName {                                                        //Contract like class  
-                    uint8 myUint8 =1;                                      //uint for small fixed numbers
-                    uint256 myUint256=1;                                   //uint for bigger numbers (by default is this)=uint
-                    uint public myUint =1;                               //number >= 0
-                    int public myInt =-1;                                  // +-= 0
-                    string public myString = "String name";             //tekst v kavichki '/"
-                    bool public myBool = true;                         // za true ili faulse samo
-                    uint public constant myConstant =47;                    // constanta ne se promenq
-                    bytes32 public mybytes32 = "hello bytes"                   //neshto kato string
-    
-}
-
-modifier NameModif {                                                    //modifier s ime NameModif
-        require(uint == 4,'uint need to be 4');                            //kakav e argumenta na modifiera (tuka uint da e 4)
-        _;                                                                    // tova vinago go ima na kraq na modifiera
-        }
-
-
-
-
-struct Player {                                                     //structor v contracta v koqto imame stoinosti
-        string firstName;
-        string lastName;
-          }
-
-function addPlayer(string memory firstName, string memory lastName) public Namemodif{           //funkciq v koqto vikame modifiera , prosto se dobavq imeto sled public 
-                                                                                                   //moje nqkolko modifiera prosto pishem space i pishem drugoto ime 
-                                                                                               //moje da v skovi()  da pishem imeto na promenilvata v funk i modiiera da q e qsno
-  
-
-
-  function addPlayer(string memory firstName, string memory lastName) public{           //funkciq s koqto svarzvame structorata v skobi i slagame memory da se zapomnqt
-        players.push(Player(firstName, lastName));
-        playerCount +=1;
-
-}
-
-    struct Person{                                                                              //druga structora s vikane
-        uint id;
-        string name;
-    }
-    
-    Person public Myid = Person(22,"Sam");
-}
-
-External contracts / is / Cont public externalContract = Cont(address on cont);
                                                                             Key Word
 
 Address: Every account and smart contract has an address. It is used to send and receive Ether from one account to another. You can consider it your public identity on the Blockchain.
@@ -85,6 +35,41 @@ msg.value: if it's payable the eather it sender 1e18 or 1000000...
 now: timestamp for the curroent time
 
 indexed: The indexed parameters for logged events will allow you to search for these events using the indexed parameters as filters.
+
+public - all can access
+
+external - Cannot be accessed internally, only externally
+
+internal - only this contract and contracts deriving from it can access
+
+private - can be accessed only from this contract
+
+                                           Interview
+
+Etherum smart contract is small program that runs on the Ethereum blockchain
+Once it is deplyed it cannot be stopped / hacked (as long as the code of the contract is correct) or be changed (the code is immutable , however the data is)
+Smart contracts can interact with echother , however they can't call an API(Application Programming Interface) on the web!
+Smart contract store limited data , string data cost gas.
+Smart contracts can be written in another languages like Vyper LLL , however Solidity is the most popular 
+
+Solidity is statically typed , variable types need to be defined , unlike dymanic languages like JavaScript
+Solidity is compiled (it has to be comiled 1st before we run the code) , it's not interpreted
+extension of Solidity files is .sol
+1 sol file can have several smart contracts
+
+what is the typical layout? pragma contract variables functions...ect
+State variables vs local variables - State variables are persisted on the blockchain after a smart contract finish to execute, whereas local variables live only during the execution of a function.
+        contract A {
+          //state variable
+              uint a;
+
+             //functions
+             function foo() {
+              uint b; //local variable
+         }
+        }
+
+
 
 
 
