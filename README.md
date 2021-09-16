@@ -218,5 +218,124 @@ Contrary to arrays, there is no error, Solidity will give you a value, which is 
           mapping(uint => bool) myMap;
           
           
-61
+61-What are the 3 mechanisms for code re-use in Solidity?
 
+      Group common codes in functions
+      Contract inheritance
+      Libraries
+      
+      
+How to make a contract A inherit from a contract B in Solidity?
+      
+                           // First import the contract
+                          import B from 'path/to/B.sol';
+
+                          //Then make your contract inherit from it
+                          contract A is B {
+
+                            //Then call the constructor of the B contract
+                           constructor() B() {}
+                          }
+      
+      
+   If A inherit from B, and both define the same function foo, which one will be resolved?
+   
+                  //Case 1
+
+                                  contract B {
+                                             function foo() external {...}
+                                  }
+                                  contract A is B {
+                                     function foo() external {...}
+                                  }
+                                  If I call foo() on A, the function A.foo() will be resolved
+
+                    //Case 2
+
+                                  contract B {
+                                     function foo(uint data) external {...}
+                                  }
+                                  contract A is B {
+                                     function foo() external {...}
+                                  }
+      
+      
+What are the 4 memory locations of Solidity?
+
+                        Storage, Memory, Stack and Calldata
+
+
+What is the default visibility of state variables?
+
+                            Private
+                            
+                            
+                            
+                            
+                            What is the difference between address and address payable?
+Only address payable can receive money
+
+               Is it necessary to make an address address payable to transfer ERC20 tokens?
+No. The payable requirement is only required for native Ether. Ethereum has no knowledge of ERC20 tokens. For Ethereum, this is just a variable in a smart contract, like any other variables.
+
+Give 3 ways to save gas
+                  Put less data on-chain
+                  Use events instead of storage
+                  Optimal order for variable declaration. See this link.
+                  
+How would optimally order uint128, bytes32 and another uint128 to save gas?
+uint128
+uint128
+bytes32
+The EVM stores variable in 32-bytes slot. However Solidity is smart enough to pack into a single slot several variables if they can fit together. For this optimization to work, packed variables have to be defined next to each other. In the above example, the 2 uint128 will be placed in the same 256 bit slots (128 + 128 = 256).
+
+
+How to concatenate 2 strings a, b?
+Use the abi.encodePacked() function:
+
+                        string(abi.encodePacked(a, b));
+
+ How to get the length of a string in solidity?
+ 
+                          bytes memory byteStr = bytes(a); //a is a string
+                          bytesStr.length;
+
+
+How to to create a smart contract from a smart contract?
+
+                      contract A {
+                        constructor(uint a) {...}
+                        function foo() external {...}
+                      }
+
+                      contract B {
+                        function createA(uint a) external {
+                          A AInstance = new A(a); //pass constructor argument(s) if any
+                        }
+                      }
+                      
+                      
+How to to call another smart contract from a smart contract?
+
+                            contract A {
+                              function foo() view external returns(uint) {...}
+                            }
+
+                            contract B {
+                              function callFoo(address addrA) external {
+                                uint result = A(addrA).foo();
+                              }
+                            }    
+                            
+                            
+                            
+How to get the address of a smart contract that was deployed from a smart contract?
+  
+Using the address() operator to cast the contract type into an address:
+
+                        address childAddress = address(new Child())
+                        
+                        
+                        
+                        
+ 76-
