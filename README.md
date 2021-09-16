@@ -143,5 +143,80 @@ Famous Ethereum wallets                           netowkrs you can deplay Solidi
     Ledger                                                        Ropsten
     Trezor                                                        Kovan
     
+50 - define custom data 
+  Struct
+  Enum 
+Struct are for representing complex data structures with different fields. Enum are for creating variant for a single data. Ex: a color can be red, blue, yellow. You can combine both by defining an enum, and a struct that uses this enum in a field;
+    instance struct:
     
+      struct User {                       
+       address id;
+        string name;
+      }
+  
+     //Method 1 (argument order matters)
+      User("0xAio90....", "Mike");
+
+      //Method 2 (argument order does not matter)
+      User({name: "Mike", address: "0xAio90...."});
+      
+  Inner mapping:
+  
+        struct User {
+      address id;
+    string name;
+      mapping(address => bool) friends;
+    }
+      //let assume the User struct is stored inside a mapping
+    mapping(address => User) users;
+
+    //Inside a function, you would instantiate your struct like this
+    users["0xAio90..."].id = "0xAio90...";
+    users["0xAio90..."].name = "Mike";
+    users["0xAio90..."].friends["0xIopop..."] = true;
+    users["0xAio90..."].friends["0xjk89I..."] = true;
     
+    Array vs Mapping
+    I would use an array if I need to iterate through a collection of data. And I would use a mapping if I need to rapidly lookup a specific value
+    
+    //Let's consider this struct
+      struct User {
+     uint id;
+     string name;
+      }
+
+      //First, let's use an array to store all its ids
+      uint[] userIds;
+
+      //Then, let's use a mapping for rapid lookup
+      mapping(uint => User) users;
+
+          //If we need to rapidly lookup a user, we use the mapping
+          //And if we need to iterate through users, we iterate through the userIds array, 
+          //and for each userIf we can
+          //lookup the correct user in the mapping
+          
+          
+How to define an in-memory array of 3 integers?
+          
+          uint[] memory arr = new uint[](3);
+
+
+How to add a value to an in-memory array?
+    uint[] memory arr = new uint[](3);
+
+    uint[0] = 1;
+    uint[1] = 2;
+    uint[2] = 3;
+    uint[3] = 1; //out-of-bounds error
+    
+How to get the list of all keys in a mapping (like Object.keys() in Javascript) - not possible, Smart contracts don’t keep track of the list of entries in a mapping.
+
+What happen if you try to access the key of a mapping that does not exist?
+Contrary to arrays, there is no error, Solidity will give you a value, which is the default value of the type.
+
+          mapping(uint => bool) myMap;
+          
+          
+61
+
