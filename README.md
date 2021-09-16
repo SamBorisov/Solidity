@@ -338,4 +338,120 @@ Using the address() operator to cast the contract type into an address:
                         
                         
                         
- 76-
+ 76-What will be the value of msg.sender if a contract calls another one?
+ 
+                          //This is the inner contract
+                          contract A {
+                            function bar() view external returns(address) {
+                               //What will be the value of `msg.sender` here?
+                            }
+                          }
+
+                          //This is the outer contract
+                          contract B {
+                              function foo() external {
+                                  A aInstance = new A();
+                                   aInstance.bar();
+                              }
+                          }
+
+
+How to transfer ERC20 tokens?
+
+                        contract ERC20Interface {
+                          function totalSupply() public view returns (uint);
+                          function balanceOf(address tokenOwner) public view returns (uint balance);
+                          function allowance(address tokenOwner, address spender) public view returns (uint remaining);
+                          function transfer(address to, uint tokens) public returns (bool success);
+                          function approve(address spender, uint tokens) public returns (bool success);
+                          function transferFrom(address from, address to, uint tokens) public returns (bool success);
+
+                          event Transfer(address indexed from, address indexed to, uint tokens);
+                          event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
+                        }
+
+                        contract DecentralizedExchange {
+                          function transferToken(address ERC20Address, address to, uint amount) {
+                            ERC20Interface(ERC20Address).transfer(to, amount);
+                          }
+                          
+                          
+How to declare and emit an event?
+
+                            contract A {
+                              //declare event
+                              Event TokenSent(uint amount, address to);
+                              function sendToken(uint amount, address to) external {
+                                 ...
+                                 //Emit event
+                                 emit TokenSent(amount, to); //careful, old Solidity 0.4 code didnt not require the emit keyword, dont be confused
+                              }
+                            }    
+                            
+ What is the indexed keyword in event definition?
+ 
+If an event field is declared with the indexed keyword, it means that external entities can filter only events whose field match a specific value. For example, in the below example, it means it’s possible to filter events with a to field equal to a specific value.
+
+                        Event TokenSent(uint amount, address indexed to);          
+                        
+  How many event fields can be marked indexed?
+3 maximum.   
+
+Is it possible for a smart contract to read the events emitted before?
+No. Only external entities can queries events.
+
+Is it possible to delete or modify a past event?
+No. Events are immutable.
+
+In Solidity, how to do like a Javascript console.log for debugging?
+There is no equivalent in Solidity, but you can use events, even if its not designed for this.
+
+
+
+How would you implement access control without modifier?
+
+                        contract A {
+                          address admin;
+                          constructor() {
+                             admin = msg.sender;
+                          }
+
+                          function protectedFunction() external {
+                            require(msg.sender == admin, 'only admin');
+                            ...
+                          }
+                        }
+                        
+How would you implement access control WITH modifier?
+
+                        contract A {
+                          address admin;
+                          constructor() {
+                             admin = msg.sender;
+                          }
+
+                          function protectedFunction() external onlyAdmin() {
+                            ...
+                          }
+
+                          modifier onlyAdmin() {
+                            require(msg.sender == admin, 'only admin');
+                            _;
+                          }
+                        }   
+                        
+                        
+ How to cancel a transaction?
+ 
+Once a transaction has been sent, nobody can prevent it from being mined by a miner. But you can still send another transaction preventing the first one from working IF its mined before the first one. This second transaction will have the following properties:
+
+it will have the same nonce (i.e an incrementing integer that is sent in each transaction, specific to each Ethereum address)
+it will have a higher gasPrice than the first transaction
+it will send a tiny amount of Ether to another address
+Let’s review why we need these. The same nonce means that the first transaction to be mined will prevent the other one from being mined: miners only mine transactions whose nonce is higher than the previous nonce for the address that has signed the transaction.
+
+The higher gasPrice means a higher reward for miner, so if a miner has the choice to mine the second or the first transaction he will choose the second one.
+
+And finally, sending a tiny amount of Ether is just because a transaction needs to do something on the blockchain, so we just do something that is useless but doesn’t cost us much. Actually, you could even call a read-only function in any smart contract, in a transaction, and you wouldn’t even need to send this tiny amount of Ether. You would still need to cover the gas fee in every case.  
+
+Difficult 87:
