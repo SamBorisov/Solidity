@@ -1,0 +1,95 @@
+// SPDX-License-Identifier: GPL-3.0
+// SPDX-License-Identifier: MIT
+
+pragma solidity 0.8.2;
+pragma solidity ^0.8.6;
+pragma solidity >=0.7.0 <0.9.0;
+
+contract Variables {                        //contract like class
+
+      address nameaddress;                  //address for eter blockchain 
+      bool nameBool = true;                        // a true or faluse variable
+        
+      uint nameUint;                            //number >=0 uint = uint256
+      uint256 nameUint256 =47;                     // 2^256-1max , this uint was given 47
+      uint8 nameUint8;                         //2^8-1
+      
+      int nameInt;                             //number +-=0
+      int public constant nameInt1 = -47        //publichen int constanta ne se promenq i se vijda (moje i uint i bool i bytes sas public constanta)
+      int8 nameInt8;                            //2^8-1 limited number
+      
+      string nameString;
+      string public constant nameStrong1 = 'ooo petio';     //string publichen moje da se vidi kato pusnem prog i constanta ne moje da promenq
+      string nameString2 = "Hello this is string";         //string for big text '/"
+      
+      bytes nameBytes = "this is for short text";        //bytes more effecent for the blockchain limited charakters bytes32=bytes
+      bytes8 nameBytes8;                                    
+     
+  
+      mapping(address => uint) nameMapping;             //realtionship we give addres and a number that goes with the address "we say the address goes with uint"
+      mapping(string => bool) nameMapping2;              //"we say the boolien goes with text"
+      
+      
+      uint[] nameArrayNumbers = [1,2,3,4];                   //array with nmumbers  
+      string[] nameArrayText = ["hi","hey","hello"];          //array with text
+      nameStruct[] nameArrayStruct;                           //array with struct that below
+      
+          
+      struct nameStruct{                                     //struct with variables
+          string name;
+          uint8 age;
+          uint32 height;
+          }
+    nameStruct nameGeorge = nameStruct("George",47,178);          //calling struct saying name , calling struct again and typing the variables
+    nameArrayStruct.push(nameGeorge);                             //we push the variables we named George in the array
+         
+           // mapping (key => mapping(key2 => value2)) public mymapping2;
+              mapping (address => mapping(uint => Book)) public myBooks;
+    
+        struct Book{
+                 string title;
+                 string author;
+      }
+      
+}
+
+contract Functions{
+        
+        uint num;
+        
+      constructor() public {                                        //constructor(function that start when we deploy the preogram and run only once
+          num = 3;
+          nameFunction();
+          
+          }
+      
+      function nameFunction() public returns(uint){                 //normal fucntion that returns
+            retrun num;
+      }
+      
+      function NameFuncINT() internal{                             //only in this contract it can be executed
+      
+      }
+
+
+       function NameFuncEXT() external{                             //in this contract it can't be executed but outside it can
+      
+      }
+
+       modifier nameModifier{                                       //func that can be added in other functions
+              require(num > 5);                                     //require that num is bigger than 5 
+               _;                                                   // this say where the funcuin will cointue it can be placed on top of modifier or bottom
+       }
+        modifier nameModifier1{                                       //func that can be added in other functions(same modifier)
+              _;                                                       //the code on fuction 1st then modifier
+              require(num > 5);                                     //require that num is bigger than 5 
+             }
+       
+
+       function nameFunction() public payable returns(uint){                 //function that is payble people can put ether to execute it 
+            require(num == msg.value);
+            retrun num;
+            now;                                                              //timesptam on current time
+      }
+
+}
