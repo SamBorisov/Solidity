@@ -19,4 +19,29 @@ contract MyCon{
         
     }
     
+    // SPDX-License-Identifier: MIT
+
+pragma solidity 0.8.2;
+
+
+contract test {
+ uint[] public a;
+
+function add() public {
+
+    a.push(4);
+    a.push(47);
+    a.push(14);
+    a.push(7);
     
+    a[1];
+    
+    a[0]=45;
+    
+   
+    
+    for(uint i = 0; i< a.length; i++){
+        a[i];
+    }
+ }
+}
