@@ -14,7 +14,7 @@ emit
 
 variables
 
-kaywords -public privite internal external view pure....now..msg...timestamp, storage/memory/stack/calldata payble
+kaywords -public privite internal external view pure....now..msg...timestamp, storage/memory/stack/calldata payble / pop push length / assert
 
 default visibilit varubles ect...
 
