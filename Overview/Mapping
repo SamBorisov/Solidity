@@ -1,1 +1,38 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.7.0;
 
+contract MyCon{
+
+ //   mapping(key => value) mymapping;
+    mapping(uint => string)public FavBook;
+    
+       constructor()  {                 
+        FavBook[1] = "Rich Poor Dad";
+        FavBook[2] = "The Laws of Human Nature";
+        FavBook[3] = "Strech";
+    }
+    // just some mapping into the blockchain
+    
+    mapping(uint=> Book) public books;
+    
+      struct Book{
+        string title;
+        string author;
+    }
+    
+     function addBook (uint _id, string memory _titile, string memory _author) public{
+        books[_id]=Book(_titile,_author);
+    }
+    //mapping num with struct for book for adding a book 
+    
+   // mapping (key => mapping(key2 => value2)) public mymapping2;
+    mapping (address => mapping(uint => Book)) public AddresBooks;
+    
+    
+    
+    
+    function addmybook(uint _id, string memory _titile, string memory _author)public{
+        AddresBooks[msg.sender][_id] = Book(_titile, _author);
+    }
+    //double mapping for adding book on ower address
+}
