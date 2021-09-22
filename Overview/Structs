@@ -1,1 +1,35 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.7.0;
 
+contract MyCon{
+
+    struct User {
+        address addr;
+        uint score;
+        string name;
+        
+    }
+    
+    User[] public  users;
+    mapping(address => User) public userlist;
+
+    
+    
+    function func(string calldata _name) public {
+        User memory user1 = User(msg.sender , 0 , _name);           //write 
+        User memory user2 = User(msg.sender , 0 , 'Mecho');         //write
+        
+        User memory user3 = User({name: _name,
+                                  score: 0 ,
+                                    addr: msg.sender});           //write but different
+        user3.addr;                                                 //read  
+        user3.score = 80;                                           //change
+        delete user1;                                               //delete
+        
+        
+        users.push(user2);                                  //push into arrat
+        users.push(User(msg.sender , 2 , 'Pepko'));         //push again
+        userlist[msg.sender] = user2;                       //mapping 
+    }
+    
+}
