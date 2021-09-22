@@ -33,3 +33,34 @@ contract MyCon{
     }
     
 }
+
+contract MyTodos{
+
+        struct  Todo{
+            string task;
+            bool finished;
+            
+        }
+        
+        Todo[] public todos;
+        
+        function create(string memory _task) public {
+            todos.push(Todo(_task , false));
+        }
+        
+        function get(uint _index) public view returns (string memory , bool){
+            Todo storage todo = todos[_index];
+            return (todo.task, todo.finished);
+        }
+        
+        //update task
+        function update(uint _index, string memory _task) public {
+            Todo storage todo = todos[_index];
+            todo.task = _task;
+        }
+            //update task
+        function finish(uint _index) public {
+            Todo storage todo = todos[_index];
+            todo.finished = !todo.finished;
+        }
+}
