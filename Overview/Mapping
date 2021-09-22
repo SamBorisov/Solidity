@@ -11,8 +11,16 @@ contract MyCon{
         FavBook[2] = "The Laws of Human Nature";
         FavBook[3] = "Strech";
     }
-    // just some mapping into the blockchain
-    
+    // just some mapping data into the blockchain
+}
+
+
+
+
+
+
+contract MyCon2{
+
     mapping(uint=> Book) public books;
     
       struct Book{
@@ -23,16 +31,37 @@ contract MyCon{
      function addBook (uint _id, string memory _titile, string memory _author) public{
         books[_id]=Book(_titile,_author);
     }
-    //mapping num with struct for book for adding a book 
+    //mapping num with struct for book for adding a book 'memory' for remebering
     
    // mapping (key => mapping(key2 => value2)) public mymapping2;
-    mapping (address => mapping(uint => Book)) public AddresBooks;
+    mapping (address => mapping(uint => Book)) public AddressBooks;
     
     
     
     
     function addmybook(uint _id, string memory _titile, string memory _author)public{
-        AddresBooks[msg.sender][_id] = Book(_titile, _author);
+        AddressBooks[msg.sender][_id] = Book(_titile, _author);
     }
     //double mapping for adding book on ower address
+}
+
+
+
+
+
+contract  MyCon3{
+    
+    mapping(address=>uint) public myMap;
+    
+    function get(address _addr) public view returns (uint){ //get infro in mapping not need if mapping is public and don't ahve other reqires
+        return myMap[_addr];
+    }
+    
+    function set(address _addr , uint _i) public {          //set the num into the the addres we choose 
+        myMap[_addr] = _i;
+    }
+    
+    function remove (address _addr) public {                //delete a num into a mapping
+        delete myMap[_addr];
+    }
 }
