@@ -15,5 +15,5 @@ contract con{
         
     }
 
-    
+    //this logs will be stored in the blockchain but smart contracts won't be able to accsess that
 }
