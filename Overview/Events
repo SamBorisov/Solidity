@@ -1,1 +1,19 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.7.0;
 
+contract con{
+    
+    event newTrade(
+        uint indexed date,
+        address indexed from,               //filter index - make it more expenice , max 3 indexed in event
+        address indexed to,                 //gass is lower in event than storage variables
+        uint amount
+        );
+    
+    function tade(address to, uint amount) public {
+        emit newTrade(block.timestamp, msg.sender, to , amount);
+        
+    }
+
+    
+}
