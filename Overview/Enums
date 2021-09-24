@@ -35,6 +35,25 @@ contract Con{
     
 }
 
+
+
+
+contract con2{
+    
+    enum Level { rookie , mafia , boss , UgaBuga }
+    Level public lv;
+    
+
+    function NextLevel() public {
+        lv = Level(uint(lv)+1);
+    }
+    
+}
+
+
+
+
+
 /*
 enum gogo55{ read, write  , edit }
                0     1      2
