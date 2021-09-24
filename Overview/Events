@@ -7,13 +7,19 @@ contract con{
         uint indexed date,
         address indexed from,               //filter index - make it more expenice , max 3 indexed in event
         address indexed to,                 //gass is lower in event than storage variables
-        uint amount
+        uint amount,
+        string massage
         );
     
+    event empty();
+    
     function tade(address to, uint amount) public {
-        emit newTrade(block.timestamp, msg.sender, to , amount);
+        emit newTrade(block.timestamp, msg.sender, to , amount , 'We did it');
+        emit empty();
         
     }
 
-    //this logs will be stored in the blockchain but smart contracts won't be able to accsess that
+    
 }
+    //this logs will be stored in the blockchain but smart contracts won't be able to accsess that
+
