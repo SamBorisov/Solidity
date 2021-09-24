@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.7.0;
+
+contract Con{
+    
+    enum Status {
+        Pending,
+        Shipped,
+        Accepted,
+        Rejected,
+        Canceled
+    }
+    
+    Status public status;
+    
+    function cancel() public {
+        require(status == Status.Pending);
+        status = Status.Canceled;
+    }
+    
+    function ship() public {
+        require(status == Status.Pending);
+        status = Status.Shipped;
+    }
+    
+    function acceptDelivery() public {
+        require(status == Status.Shipped);
+        status = Status.Accepted;
+    }
+    
+    function rejectDelivery() public {
+        require(status == Status.Shipped);
+        status = Status.Rejected;
+    }
+    
+}
