@@ -34,3 +34,22 @@ contract Con{
     }
     
 }
+
+/*
+enum gogo55{ read, write  , edit }
+               0     1      2
+
+enum gogo66{1: read, 2:write  , 4:edit }
+                1      2      	  4
+
+1 create 0001
+2 read   0010
+4 update 0100
+8 delete 1000
+
+create | read | update | delete = 1111
+
+struct Gogomir{
+	gogo55
+	... }
+    */
