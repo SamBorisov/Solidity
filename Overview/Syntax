@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.2;
-pragma solidity ^0.8.6;
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity 0.8.2;                     //specific version
+pragma solidity ^0.8.0;                    // version from 0.8.0 to 0.8.max it can't be 0.9
+pragma solidity >=0.7.0 <0.9.0;                //version beetween 0.7 and 0.9
 
 contract Variables {                        //contract like class
 
