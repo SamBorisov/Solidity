@@ -65,3 +65,22 @@ contract MyTodos{
             todo.finished = !todo.finished;
         }
 }
+
+contract mycon2{
+    
+    struct People{
+        uint facnum;
+        string name;
+        
+    }
+    
+    People public person = People({facnum:20 , name: " Sam"});
+    
+    People[] public people;
+    
+    function addPersion(string memory _name, uint _facnum) public{
+        people.push(People({facnum: _facnum , name: _name}));
+        
+        
+    }
+}
