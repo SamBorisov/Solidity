@@ -46,6 +46,9 @@ private - can be accessed only from this contract - default variables (all data 
 You either don’t put private data on the blockchain, or you put hashes.
 
                                            Interview
+prove of work(more than 51% need to do the task) / prove of stake (one need to do other so validate)
+Layer 1(base layer) -> Layer 2(app added on top), rollups
+Sharding - blockchain of blockchains
 
 Hash - Unique fixed length string to identify a piece of data
 Hash Algorithm - a function that computes data into unique hash 
