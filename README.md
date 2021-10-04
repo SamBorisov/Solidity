@@ -47,6 +47,15 @@ You either don’t put private data on the blockchain, or you put hashes.
 
                                            Interview
 
+Hash - Unique fixed length string to identify a piece of data
+Hash Algorithm - a function that computes data into unique hash 
+Mining - the processs of finding the 'solution' to the blockchain 'problem'. ( exapile : the problem was to find hash that start with 0000) Nodes get paid for mining blocks.
+Block - list of transactions mined together
+Decentralized - having no single point of authority
+Nonce: a 'nummber used once' to find the solution to the blockchain problem. It's also used to define the transaction number for an account /address
+Private key: Only know to the key holder , it's used to 'sign' transactions
+Public key: Is derived from your privet key. Amyone can 'see' it , and use it to verify that a transacion came to you.
+
 Etherum smart contract is small program that runs on the Ethereum blockchain
 Once it is deplyed it cannot be stopped / hacked (as long as the code of the contract is correct) or be changed (the code is immutable , however the data is)
 Smart contracts can interact with echother , however they can't call an API(Application Programming Interface) on the web!
