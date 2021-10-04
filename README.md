@@ -50,6 +50,11 @@ prove of work(more than 51% need to do the task) / prove of stake (one need to d
 Layer 1(base layer) -> Layer 2(app added on top), rollups
 Sharding - blockchain of blockchains
 
+publiv:visibale and useable for eveyone
+Internel: only for this contract can be called or seen
+External:can be called in other contracts
+Pravite:only can be seen in this contract only
+
 Hash - Unique fixed length string to identify a piece of data
 Hash Algorithm - a function that computes data into unique hash 
 Mining - the processs of finding the 'solution' to the blockchain 'problem'. ( exapile : the problem was to find hash that start with 0000) Nodes get paid for mining blocks.
