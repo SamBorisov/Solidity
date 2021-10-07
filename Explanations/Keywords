@@ -111,5 +111,14 @@ What is the difference between address and address payable?
             
             Is it necessary to make an address address payable to transfer ERC20 tokens?
 No. The payable requirement is only required for native Ether. 
-Ethereum has no knowledge of ERC20 tokens. For Ethereum, this is just a variable in a smart contract, like any other variables.            
+Ethereum has no knowledge of ERC20 tokens. For Ethereum, this is just a variable in a smart contract, like any other variables.       
 
+
+        What is a library in Solidity?
+A library is a piece of code that be re-used by other smart contracts. There are 2 types of libraries:
+
+    deployed
+    embedded
+
+      Which Solidity function would you use to verify a signature?
+ecrecover().
