@@ -290,5 +290,87 @@ How would you implement access control WITH modifier?
                             _;
                           }
                         }   
-                                               
+           
+           
+           
+Create a function to determine if another address is a contract or a regular address
+
+                                   function isHuman(address addr) external {
+                                      uint256 codeLength;
+
+                                      assembly {codeLength := extcodesize(addr)}
+                                      return codeLength == 0 ? true : false;
+                                    }
+                                  }
+                                  
+                                  
+How to declare assembly code?
+                                    assembly {}    
+                                    
+                                    
+How to generate a random integer in Solidity?
+We can leverage the block.timestamp and block.difficulty as a source of randomness, and use the keccak256() hashing function:
+
+                        uint(keccak256(abi.encodePacked(block.timestamp, block.difficulty)))
+
+
+How to produce a hash of multiple values in Solidity?
+
+                        keccak256(abi.encodePacked(a, b, c))                                    
+                                    
+
+What is a re-entrancy attack?
+A re-entrancy attack happen when a contract A calls a contract B which call back the calling function on contract A to perform some malicious effect. 
+Example with a DAO-like attack:
+
+              contract A {
+                //...
+                function pay(address payable to, uint amount) external {
+                  if(amount <= balances[msg.sender]) {
+                    B(to).badFunction().send(amount);
+                    balances[msg.sender] -= amount;
+                }
+              }
+
+
+              contract B {
+                address
+                function badFunction(address payable to) external {
+                  ContractA(msg.sender).pay();
+                  
+                  
+ When is a library embedded vs deployed?
+
+                        //Embedded (function is internal)
+                        library Lib {  
+                          function add(uint a, uint b) pure internal returns(uint) {
+                            return a + b;
+                          }
+                        }
+
+                        //Deployed (function is public)
+                        library Lib {  
+                          function add(uint a, uint b) pure public returns(uint) {
+                            return a + b;
+                          }
+                        }
                         
+                        
+ Give an example of how to use a library in a smart contract
+ 
+                                  library Lib {  
+                                    function add(uint a, uint b) pure internal returns(uint) {
+                                      return a + b;
+                                    }
+                                  }
+
+                                  contract A {
+                                    using Lib for uint;
+
+                                    function add(uint a, uint b) pure external returns(uint) {
+                                      return a.add(b);
+                                    }
+                                  }
+                                                   
+                }
+              }
