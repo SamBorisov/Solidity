@@ -1,1 +1,115 @@
+Address: Every account and smart contract has an address. It is used to send and receive Ether from one account to another. You can consider it your public identity on the Blockchain.
+
+Mapping: Data type used to store associations. Similar to a list but holding 2 values, and allow you to quickly get the value corresponding to a key.
+
+Event: When you call an event, it causes the arguments to be stored in transaction's log.
+Emit: keyword used to call Events 
+
+Constructor: function that is run directly when the contract is created or deplyed in the the blockchain/it can be run once and only once
+
+msg: keyword that allows us to access some special variables that are available for us from the blockchain.
+
+Require: Convenience function in solidity. It guarantees validity of conditions that cannot be detected before execution.
+
+Constant: keyword added to a variable that tells solidity it cannot be changed
+
+struct: Struct types are used to represent a record. That allow you to create your own data type.
+
+enum: Enums restrict a variable to have one of only a few predefined values. The values in this enumerated list are called enums.
+
+arrey: player[] public players;
+
+modifier: can be used to chnage the behaviour of functions in a declarative way. For example you can used a modifier to automatically check a condition prios to exectuing the function.
+
+msg.sender: The user that calls this function
+
+super: keyword to add other constructor modifiers you shoud add in the function
+
+msg.sender: the person who call the function
+
+msg.value: if it's payable the eather it sender 1e18 or 1000000...
+
+now: timestamp for the curroent time
+
+indexed: The indexed parameters for logged events will allow you to search for these events using the indexed parameters as filters.
+
+public - all can access
+
+external - Cannot be accessed internally, only externally
+
+internal - only this contract and contracts deriving from it can access
+
+private - can be accessed only from this contract - default variables (all data on blockchain is public so it's not so private)
+You either don’t put private data on the blockchain, or you put hashes.
+
+view - blue color - only can see 
+pure - do maths 
+
+
+                                About BlockChain
+                                
+                                
+prove of work(more than 51% need to do the task) / prove of stake (one need to do other so validate)
+Layer 1(base layer) -> Layer 2(app added on top), rollups
+Sharding - blockchain of blockchains
+                                
+
+Hash - Unique fixed length string to identify a piece of data
+Hash Algorithm - a function that computes data into unique hash 
+Mining - the processs of finding the 'solution' to the blockchain 'problem'. ( exapile : the problem was to find hash that start with 0000) Nodes get paid for mining blocks.
+Block - list of transactions mined together
+Decentralized - having no single point of authority
+Nonce: a 'nummber used once' to find the solution to the blockchain problem. It's also used to define the transaction number for an account /address
+Private key: Only know to the key holder , it's used to 'sign' transactions
+Public key: Is derived from your privet key. Amyone can 'see' it , and use it to verify that a transacion came to you.
+
+Etherum smart contract is small program that runs on the Ethereum blockchain
+Once it is deplyed it cannot be stopped / hacked (as long as the code of the contract is correct) or be changed (the code is immutable , however the data is)
+Smart contracts can interact with echother , however they can't call an API(Application Programming Interface) on the web!
+Smart contract store limited data , string data cost gas.
+Smart contracts can be written in another languages like Vyper LLL , however Solidity is the most popular 
+
+Solidity is statically typed , variable types need to be defined , unlike dymanic languages like JavaScript
+Solidity is compiled (it has to be comiled 1st before we run the code) , it's not interpreted
+extension of Solidity files is .sol
+1 sol file can have several smart contracts
+
+State variables vs local variables - State variables are persisted on the blockchain after a smart contract finish to execute, whereas local variables live only during the execution of a function.
+3 data types we used often - uint addres and string , 2 container types - array and mapping
+
+                define custom data 
+  Struct
+  Enum 
+Struct are for representing complex data structures with different fields.
+Enum are for creating variant for a single data. Ex: a color can be red, blue, yellow. 
+You can combine both by defining an enum, and a struct that uses this enum in a field;
+
+                Array vs Mapping
+I would use an array if I need to iterate through a collection of data. And I would use a mapping if I need to rapidly lookup a specific value
+
+How to get the list of all keys in a mapping (like Object.keys() in Javascript) - not possible, Smart contracts don’t keep track of the list of entries in a mapping.
+What happen if you try to access the key of a mapping that does not exist?
+Contrary to arrays, there is no error, Solidity will give you a value, which is the default value of the type.
+
+
+        What are the 3 mechanisms for code re-use in Solidity?
+
+  Group common codes in functions
+  Contract inheritance
+  Libraries
+
+               What are the 4 memory locations of Solidity?
+
+Storage, Memory, Stack and Calldata
+
+
+What is the default visibility of state variables: Pravite
+
+What is the difference between address and address payable?
+            Only address payable can receive money   
+            
+            
+            Is it necessary to make an address address payable to transfer ERC20 tokens?
+No. The payable requirement is only required for native Ether. 
+Ethereum has no knowledge of ERC20 tokens. For Ethereum, this is just a variable in a smart contract, like any other variables.            
 
