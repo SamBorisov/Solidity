@@ -1,1 +1,3 @@
-
+    
+    Is there a difference in cost between the functions of creating a new state variable or changing it?
+Yes. Creating is more expensive than changing.
