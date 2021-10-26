@@ -122,3 +122,16 @@ A library is a piece of code that be re-used by other smart contracts. There are
 
       Which Solidity function would you use to verify a signature?
 ecrecover().
+
+
+        What are source files?
+These are the files that can contain an arbitrary number of contract definitions, include directives and pragma directives.
+
+         What is the ABI of the contract?
+ABI is the binary interface of the application. ABI is an interface between two software modules,
+one of which is often at the machine code level. In Ethereum, basically, you can encode Solidity contracts for EVM and, 
+conversely, read data from transactions.
+
+
+        What are the state variables?
+State variables are values that are permanently stored in contract storage.
