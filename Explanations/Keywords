@@ -135,3 +135,8 @@ conversely, read data from transactions.
 
         What are the state variables?
 State variables are values that are permanently stored in contract storage.
+
+private means it's only callable from other functions inside the contract; 
+internal is like private but can also be called by contracts that inherit from this one; 
+external can only be called outside the contract; 
+and finally public can be called anywhere, both internally and externally.
