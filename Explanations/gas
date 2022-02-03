@@ -34,3 +34,9 @@ You'll also want to cluster identical data types together (i.e. put them next to
 For example, a struct with fields uint c; uint32 a; uint32 b; will cost less gas than a struct with fields uint32 a; uint c; uint32 b; 
 because the uint32 fields are clustered together.
 ////
+View functions don't cost gas
+view functions don't cost any gas when they're called externally by a user.
+
+This is because view functions don't actually change anything on the blockchain – they only read the data. 
+So marking a function with view tells web3.js that it only needs to query your local Ethereum node to run the function, 
+and it doesn't actually have to create a transaction on the blockchain (which would need to be run on every single node, and cost gas).
