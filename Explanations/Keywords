@@ -146,3 +146,8 @@ view tells us that by running the function, no data will be saved/changed.
 pure tells us that not only does the function not save any data to the blockchain, but it also doesn't read any data from the blockchain.
 Both of these don't cost any gas to call if they're called externally from outside the contract (but they do cost gas if called internally by another function).
 
+assert is similar to require, where it will throw an error if false. 
+The difference between assert and require is that require will refund the user the rest of their gas when a function fails,
+whereas assert will not. So most of the time you want to use require in your code; assert is typically used when something has gone horribly wrong with the code 
+(like a uint overflow).
+
