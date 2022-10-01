@@ -53,3 +53,38 @@ But it's an important use-case to keep in mind if you have some data you want to
 
 For example, we could use this as a historical record of zombie battles — we could create an event for every time one zombie attacks another and who won.
 The smart contract doesn't need this data to calculate any future outcomes, but it's useful data for users to be able to browse from the app's front-end.
+
+////Gas Considerations
+Gas, described in more detail in [gas], is an incredibly important consideration in smart contract programming. Gas is a resource constraining the maximum amount of computation that Ethereum will allow a transaction to consume. If the gas limit is exceeded during computation, the following series of events occurs:
+
+An "out of gas" exception is thrown.
+
+The state of the contract prior to execution is restored (reverted).
+
+All ether used to pay for the gas is taken as a transaction fee; it is not refunded.
+
+Because gas is paid by the user who initiates the transaction, users are discouraged from calling functions that have a high gas cost. It is thus in the programmer’s best interest to minimize the gas cost of a contract’s functions. To this end, there are certain practices that are recommended when constructing smart contracts, so as to minimize the gas cost of a function call.
+
+Avoid Dynamically Sized Arrays
+Any loop through a dynamically sized array where a function performs operations on each element or searches for a particular element introduces the risk of using too much gas. Indeed, the contract may run out of gas before finding the desired result, or before acting on every element, thus wasting time and ether without giving any result at all.
+
+Avoid Calls to Other Contracts
+Calling other contracts, especially when the gas cost of their functions is not known, introduces the risk of running out of gas. Avoid using libraries that are not well tested and broadly used. The less scrutiny a library has received from other programmers, the greater the risk of using it.
+
+Estimating Gas Cost
+If you need to estimate the gas necessary to execute a certain method of a contract considering its arguments, you could use the following procedure:
+
+var contract = web3.eth.contract(abi).at(address);
+var gasEstimate = contract.myAweSomeMethod.estimateGas(arg1, arg2,
+    {from: account});
+gasEstimate will tell you the number of gas units needed for its execution. It is an estimate because of the Turing completeness of the EVM—it is relatively trivial to create a function that will take vastly different amounts of gas to execute different calls. Even production code can change execution paths in subtle ways, resulting in hugely different gas costs from one call to the next. However, most functions are sensible and estimateGas will give a good estimate most of the time.
+
+To obtain the gas price from the network you can use:
+
+var gasPrice = web3.eth.getGasPrice();
+And from there you can estimate the gas cost:
+
+var gasCostInEther = web3.utils.fromWei((gasEstimate * gasPrice), 'ether');
+Let’s apply our gas estimation functions to estimating the gas cost of our Faucet example, using the code from the book’s repository.
+
+Start Truffle in development mode and execute the JavaScript file in gas_estimates.js: Using the estimateGas function, gas_estimates.js.
