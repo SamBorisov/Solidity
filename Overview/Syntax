@@ -53,11 +53,12 @@ contract Variables {                        //contract like class
       
 }
 
-contract Functions{
+contract Functions is Variables{
         
         uint num;
         
-      constructor() public {                                        //constructor(function that start when we deploy the preogram and run only once
+      constructor() Variables()                       //adding a convtract to execute into the constuctor
+      public {                                        //constructor(function that start when we deploy the preogram and run only once
           num = 3;
           nameFunction();
           
