@@ -93,4 +93,7 @@ contract Functions is Variables{
             now;                                                              //timesptam on current time
       }
 
+      contract InterfaceModel {                                                //interface has empty functuins 
+      }
+      
 }
