@@ -207,13 +207,39 @@ Function parameters (not return parameters) of external functions are forced to 
       What is stack?
 Stack is a working memory and local variables.
 ------------------------------------------------
-   Zk-SNARKS , optimistc rollups vs zk rollups
-   Zero-knowledge applications
+   Zk-SNARKS - A zk-SNARK is a zero-knowledge proof protocol where one can prove they possess certain information 
+   without revealing it and without any interaction between the parties proving and verifying the information.
+   
+  Optimistc rollups vs zk rollups - Optimistic rollups assume transactions are valid until they're proven false. 
+  zk-Rollups, on the other hand, instantly verify transactions and generate cryptographic validity proofs. 
+  The proofs can be generated using zk-SNARKs or another type of zero-knowledge proof technology, zk-STARKs.
+  
+   ^Zero-knowledge applications - The most well-known example of zk-SNARKs is their use in shielding cryptocurrency transactions. 
+   Zcash is the first widespread application of zk-SNARKs. This privacy coin allows users to choose between private and transparent addresses.
+   When a user chooses a private address, zk-SNARKs shield the transaction data.
+Other blockchain projects are also using zk-SNARKs. Ethereum started working on integrating Zcash and zk-SNARKs in 2017. That same year, 
+Zcash partnered with JP Morgan Chase (NYSE:JPM) on building a blockchain-based payment system with zk-STARKs.
+While zk-SNARKs are currently used to privatize financial transactions, that's not their only application. In the future,
+we could see them used to protect people's data during online activity.
+   
+   DAO - A decentralized autonomous organization (DAO) is an emerging form of legal structure that has no central 
+   governing body and whose members share a common goal to act in the best interest of the entity.
+   Popularized through cryptocurrency enthusiasts and blockchain technology, DAOs are used to make decisions in a bottoms-up management approach.
+   
+  MEV - Maximal extractable value (MEV) refers to the maximum value that can be extracted from block production in excess of the standard block 
+  reward and gas fees by including, excluding, and changing the order of transactions in a block
+  
+  flashloans - Flash loans are a relatively new form of uncollateralized loans available to traders on some 
+  decentralized finance (DeFi) protocols based on a blockchain network (Ethereum).
+  -Flash loans are smart contracts. This is a feature of blockchain technology that prevents funds from leaving one account to the other 
+  unless certain obligations have been fulfilled.
+  -When a flash loan has been issued, the smart contract rules ensure that the borrower pays back the loan before the transaction ends. 
+  If this condition isn't met, the smart contract reverses the transaction and it's like the loan never happened in the first place.
    
    Security Attacks
-nodes, blocks, transactions - DAO, NFTs, MEV, flashloans.
+nodes, blocks, transactions 
 
 My knowledge of what ??? does. +2 people
-What ETH2 is all about. PoS..
+
 
 
