@@ -236,7 +236,16 @@ we could see them used to protect people's data during online activity.
   -When a flash loan has been issued, the smart contract rules ensure that the borrower pays back the loan before the transaction ends. 
   If this condition isn't met, the smart contract reverses the transaction and it's like the loan never happened in the first place.
    
-   Security Attacks
+   Security Attacks - passive / active
+      Ransomware - locks , encrupts..data for money 
+      cryptojacking - using other people devices for minning without them knowing
+      Supply chain - insert  toxic code into developers without them knowing
+      DDoS - server is down/slowed cuz A LOT hacked PCs/bots trying to enther and do something at the same time
+      Phishing - trick victims to reveal passords/keyworkds or any private information (emial/fake links..)
+      50% attack - trying to take over over the network with having control over more then half of the network
+      
+      
+   
 nodes, blocks, transactions 
 
 My knowledge of what ??? does. +2 people
