@@ -1,5 +1,21 @@
 Libraries and how to use them
 
-Tokens, the ERC721 standard, and tradable assets/zombies
+- Tokens:
+  - ERC20 - Normal token that's tradable, not unique
+  - ERC721 - Special token that's tradable, unique (NFT)
+  - ERC1155 - Special token that's tradable, could have copies (fungible)
 
-How to prevent overflows and underflows using the SafeMath library
+  - ERC20PresetMinterPauser - burnable, mintable, pausable token ERC20
+
+ - SafeMath - To prevent overflows and underflows using this library
+ - TransferHelper - To make sure your transfer was executed correctly
+Secure double-spending, attacks, does not return bool false when a transaction fails 
+
+ - AccessControl - for setting up roles for users and giving them control over specific functions
+ - Ownable - for having an owner of the contract who is the deployer
+
+ - EIP712 - using a domain separator, name, version, chain ID, and address of the contract
+The main goal of EIP-712 is to ensure that both the message sender and the message receiver interpret the data in the same way. 
+It defines a standard way to structure, encode, and hash data before it is signed, ensuring consistency across different implementations.
+
+ - ECDSA - used to verify signatures, recover a signer from a signature, and more
