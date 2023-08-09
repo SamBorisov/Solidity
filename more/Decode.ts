@@ -29,4 +29,7 @@ async function decodeTransaction() {
     }
   }
 
-  decodeTransaction();
+  decodeTransaction().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
