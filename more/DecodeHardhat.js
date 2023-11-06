@@ -3,7 +3,8 @@ import { ethers } from "hardhat";
 
 const contractAddress = '';
 const transactionHash = '';
-const functionName = ''; 
+const functionName = '';
+const contractName = '';
 
 async function decodeTransaction() {
  
@@ -14,7 +15,7 @@ async function decodeTransaction() {
         return;
       }
       // Step 2: Decode the input data using the contract's details
-      const Contract = await ethers.getContractFactory("ContractName");
+      const Contract = await ethers.getContractFactory(contractName);
       const contractInstance = Contract.attach(contractAddress);
       const decodedData = contractInstance.interface.decodeFunctionData(functionName, transaction.data);
   
