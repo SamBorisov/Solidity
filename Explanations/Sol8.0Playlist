@@ -1,0 +1,47 @@
+Notes from: https://www.youtube.com/playlist?list=PLO5VPQH6OWdVQwpQfw9rZ67O6Pjfo6q-p
+:
+Constants safe gas (cost less then non constants), also immunatiable
+We can log things with custom error (msg sender…)
+Assert (num == 123) (if not it will revert) 
+If function returns multiple things we can capture them with:
+(uint x, bool b) = returnMany()
+(, bool b) = returnMany() // If we don’t need the 1st one (still need the comma)
+CREATE2 - able to predict contract address
+^Array- when you delete element the length if the array stays the same and the element is 0, If you want to remove it from the array you need to shift all other elements to the left from it and them pop the last element, another gas efficient  way is to just replace the last element this this one and then pop (but it does not safe the order) 
+^we can make test function and check after every action with assert! 
+^ Mapping - we can delete elements (when we delete it is resented to default value)
+If we want to interact with all of the mappings, we need array to save them and another mapping bool to keep in track if they are already in the array!
+^delete struct is reseting it’s values	(or value we chose)
+When interaction with storage keywords it changes the value of the structure 
+^ delete enum is resting to the 1st item of the enum, we can set statuses by giving number from 0 to n and change the enum.
+^Storage - modify blockchain
+^Memory - store until function ends 
+^Calldata - store as read-only (not modifiable) until function end (gas efficient)
+^If we access the an array and need to modify a lot of times it’s better to make a storage reference and to update the reference, but if we do it only 1-2 times it’s better to do it directly
+^ view function safe more gas declared as Storage , cuz they don’t make copy
+^events even if they don’t change anything inside the contract they put information into the blockchain and a function with event is transactional
+^Order of inheritance - from most vase-like to derived
+^Constructors cannot be calldata
+^Inheritance - is A, B , constructor(_txtB, _txtA) B(‘asfnsaf’) A(‘kdjfkdf’), it will be executed always as how it is inherently, no matter order of the constructor 
+^ when using ‘super’ keyword for parents it will call all parents if we have more then once
+^ when overriding a function, we can still call this function inside as the original logic
+^we can call external functions with ‘this.functionName’ but it costs a lot of gas!
+^receive - is executed when data is empty , if we have data the fallback will be executed , if we have both payable 
+Receive does not trigger with data and should be always payable
+Fallback triggers only with data ( if we put data and ETH, but is is not payable , I will get an error) , but only with data works if not payable
+Both are only able to be external 
+^sent ETH - contract can receive from constructor payable or receive/fallback function, or payable function overall
+Give ETH from contract - 
+1 - _to.trasnfer(_value) - revert if it fails
+2 - _to.send(value) - returns a bool if it went or not, we can do it like this to ensure:
+bool sent = _to.send(_value);
+require(sent, ”send failed”);
+3 - sents all the gas (unlike others who send 2300 both)
+(bool success, ) = _to.call{value: _value}(“”);
+require(success, ”call failed”);
+ 
+
+
+
+             
+ 
