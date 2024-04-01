@@ -39,6 +39,17 @@ require(sent, ”send failed”);
 3 - sents all the gas (unlike others who send 2300 both)
 (bool success, ) = _to.call{value: _value}(“”);
 require(success, ”call failed”);
+^Delegate Calls - When you perform a delegate call in Solidity, you're essentially executing code from another contract as if it were a part of the calling contract. This means that the code being executed has access to the state variables and storage of the calling contract.
+^When using Library we can say - using Lib for uint, and then call nameUnti.funcLub
+^abi.ecnode - makes data into bytes
+Abi.encodePacked - make to bytes and compresses data: If we have 2 strings , 1st ends with ‘a’ and use again same function but delete the ‘a’ from the 1st and add a in front of the 2nd, it will create the same output (hash problem), arrange so no dynamic inputs are next to eachother (string to string / uint to uint…)
+^Recover - sign msg -> hash msg, getEthSignedMessageHash, recover (with address, sig, EthSignedMsgHash, split the sign r s v (assembly) 
+^selfDestruct sends forced ETH to another contract (no receive function)
+^Data return (msg.data) -  1st 4 bytes 0x12345678 - name of the function made by:
+bytes4(keccack256(bytes(_func)));
+Then rest of the data is the passed parameters 
+^we can create a custom simple Interface with only the function with need (for example if we need only trasnferFrom, we can create interface with only this function)
+^Create 2 , add salt bytes 
  
 
 
