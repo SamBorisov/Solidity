@@ -65,6 +65,17 @@ Dangerous - if we use parameter like msg.value and we use mutiDelegateCall and t
 - Cashing the lengths of state variable: uint len = nums.lenght; (not use num.lenght every time in a loop and load it)
 - Load array elements - uint num = num[i], then use num in the if statement 
 ^AMM - demand supply - liquidity pools give tokens and the price of the mutilation of the tokens should be a constant x * y = k, each time there is a token that people by more of , it will cost more ‘other’ tokens to buy.
+AMM Swap tokens - dy = YdX / x + dx
+^We don’t need to declare variable if it is in the function as returns(…)
+^BitWise Operators with numbers
+- and = x & y
+- Or = x  | y
+- Xor = x ^ y
+- Not = ~x (use uint8 for small operations)
+- ShiftLeft = x << bits
+- ShiftRight = x >> bits
+- Get last N bits = x % (1 << n);
+
  
 
 
