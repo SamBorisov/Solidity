@@ -75,7 +75,76 @@ AMM Swap tokens - dy = YdX / x + dx
 - ShiftLeft = x << bits
 - ShiftRight = x >> bits
 - Get last N bits = x % (1 << n);
+^Encode data:
+- abi.encodeWithSingnature(“trasfer(address,uint256)”, to amount);
+Make sure that there are no extra spaces or anything to the function uint256, not only uint.  If we make type the code will still compile.
+- Abi.encodeWithSelector(IERC20.transfer.selector, to , amount)
+With encode selector if we have a typo it won’t compile, but if we give wrong inputs of the function or missing inputs, it will compile, we can pass the wrong datatype.
+- Abi.encodeCall(IERC20.transfer, (to, amount))
+Using call , check both function name and inputs lengths, type
+!!!All this encoding Returns the same data!
+- Test Function - 
+Function test (address _contract, bytes calldata data) external {
+	(bool ok,) = _contract.call(data);
+	require(ok, “call failed”);
+This function is to call the function we encoded with the data and address of the contract we wanna call!
+^ Upgradable contract:
+- Problem, if we upgrade with func to another contract and the storage is different (the position or there are missing things in the storage on the upgraded contract), then we could be bug so functions does not execute well and type in the wrong way! (Slots for storage problem)
+We use here fallback/recieve function to call implementation contract like:
+(Bool ok, bytes memory res) = addressImplement.delegatecall(msg.data)
+Require (ok , “failed”)
+Also fallback function does not return any data!
+- The right way is the use minimal proxy from Openzeppelin with assembly code that loads to memory slot 1 the data from 0 to calldatasize/retrundatasize and we can return it, that way our functions do write in the storage of the contract
+Code:
+assembly {
+            // Copy msg.data. We take full control of memory in this inline assembly
+            // block because it will not return to Solidity code. We overwrite the
+            // Solidity scratch pad at memory position 0.
 
+            // calldatacopy(t, f, s) - copy s bytes from calldata at position f to mem at position t
+            // calldatasize() - size of call data in bytes
+            calldatacopy(0, 0, calldatasize())
+
+            // Call the implementation.
+            // out and outsize are 0 because we don't know the size yet.
+
+            // delegatecall(g, a, in, insize, out, outsize) -
+            // - call contract at address a
+            // - with input mem[in…(in+insize))
+            // - providing g gas
+            // - and output area mem[out…(out+outsize))
+            // - returning 0 on error (eg. out of gas) and 1 on success
+            let result :=
+                delegatecall(gas(), _implementation, 0, calldatasize(), 0, 0)
+
+            // Copy the returned data.
+            // returndatacopy(t, f, s) - copy s bytes from returndata at position f to mem at position t
+            // returndatasize() - size of the last returndata
+            returndatacopy(0, 0, returndatasize())
+
+            switch result
+            // delegatecall returns 0 on error.
+            case 0 {
+                // revert(p, s) - end execution, revert state changes, return data mem[p…(p+s))
+                revert(0, returndatasize())
+            }
+            default {
+                // return(p, s) - end execution, return data mem[p…(p+s))
+                return(0, returndatasize())
+            }
+^Swot storage:
+We can also save a var to a specific slot by:
+Bytes32 public constant VAR_SLOT = bytes32(
+	uint(keccack256(“eip1967.proxy.implementation”)) - 1 );
+(Minus one to be be difficult to predict the hash)
+All functions / variables should be private, forward all calls to fallback
+We need to write get function to get the item for the storage
+When me make modifiers and check something in that storage it should be handled with view function
+
+^Check if address is contract
+requite(address.code.length >0 ,”not a contract”);
+^ Unchecked for overflowed & underflows saves gas
+Code inside unchecked could be multiple lines
  
 
 
