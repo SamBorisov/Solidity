@@ -145,6 +145,39 @@ When me make modifiers and check something in that storage it should be handled 
 requite(address.code.length >0 ,”not a contract”);
 ^ Unchecked for overflowed & underflows saves gas
 Code inside unchecked could be multiple lines
+^Assembly:
+Cannot use >= / <= , use gt (greater than only but not equal, remove number -1 to have same logic as equal.
+We can sift bits by  shl - shift left or shr -  shift right,
+Type numbers as 0x…  decimal 
+We use := to assign to value
+We can use the operator ‘or’ instead of add
+^Fallbacks: 
+in 0.8 fallbacks can take inputs as bytes and return outputs as bytes
+We can create  proxy without assembly 
+But we can still cannot return data with receive function!
+
+https://github.com/t4sk/hello-foundry
+
+^^^ Foundry Test:
+1 - name the file - Contract.t.sol
+2 - Import the Test and the contract we wanna test
+3 - make “setUp”  function that execute EVERY time before each function and deploys a new contract 
+4 - make function with name “testFuncName” / “testLogic”
+5 - if you expect function to give error - “testFailName” 
+6 - other way to handle error is “vm.expectRevert()” - no need to name function with Fail
+- There is verbosity option -v to -vvvvv , each giving more information 
+- Gas info —gas-report 
+- In foundry.toml file you can specify the sol version - solc_version = “0.8.17”, compile & build will fail if we use different version
+- Importing - get lib with forge install …., then import autoaticly from library by /libName/Contract.sol. 
+- Remapping , when installing npm packages , we need to make “remapping.txt” file and type - @openzeppelin/=node_modules/@openzeppelin
+- Importing openzeppeling with node npm i openzeppelin, import”@opeznzeppelin/contracts/contrac.sol”
+- Fomrtaing text use command - forge fmt
+- We can console log things - import “forge-std/console.log”; , make sure you remove before deploying contracts. Use -vv at test to log, we can log in the test too! To log “int” we need special function!
+- Call function from different address - vm.startPrank(address(1)) to stop using this address - vm.stopPrank(): To use only for one call we use vm.prank(address(1)) If we don’t specify address it will be executed from the contract address
+- To make test with error you can name it - testFail… or add in the code - vm.expectRevert() We can add the msg with require  - vm.expectRevert(bytes(“This is test error”)); err.throwError(); For custom - vm.expectRevert(Error.CumstomError.selector);   err.throwCustumError();
+- We can label - assertEq(uint256(1), uint256(1), “test 1”); - it will show as test one fails if there are multiple assertEqs.
+- Events - 1st type the data you expect, then emit the event and then call the function you expect to emit the event with the data 
+- Time - vm.wrap - set the block timestamp  in the future  vm.roll - set block number skip(number) - increment current timestamp rewind(number) - decrement current timestamp
  
 
 
