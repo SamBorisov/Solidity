@@ -1,6 +1,16 @@
 Notes from: 
 https://www.youtube.com/playlist?list=PLO5VPQH6OWdVQwpQfw9rZ67O6Pjfo6q-p
 https://solidity-by-example.org/
+
+Tornado cash hack - with create the address is calculated by deployer address and nonce - if the was 1st deployed contract then it is 0. Once a user calls self-destruct to a contract then the nonce of this contract won’t count so if he had 1 deployed contract and call self-destruct the nonce will be still 0. 
+He proposed a nice contract with address that got approved for the main contract with delegate call, then he deleted this contract and deployed new one with bad code with the same address, that way he managed to hack the contracts!
+   How to prevent?
+- Carefully choose addresses of proposes and to who they are
+- Avoid contracts with self-destruct
+- Add event listener to the contract if self-destruct is called and if so, update the main contract to not work with this address
+- Avoid delegate calls 
+
+
 :
 Constants safe gas (cost less then non constants), also immunatiable
 We can log things with custom error (msg sender…)
@@ -178,6 +188,47 @@ https://github.com/t4sk/hello-foundry
 - We can label - assertEq(uint256(1), uint256(1), “test 1”); - it will show as test one fails if there are multiple assertEqs.
 - Events - 1st type the data you expect, then emit the event and then call the function you expect to emit the event with the data 
 - Time - vm.wrap - set the block timestamp  in the future  vm.roll - set block number skip(number) - increment current timestamp rewind(number) - decrement current timestamp
+- Sending ETH - deal(address(1),100); - sets balance of address (no matter how big it was)
+	assert(address(1).balance, 100);
+	^ hoax - deal + prank, sets up prank and set balance 
+	hoax(address(1), 123)
+	_send(123);   - function that sends ETH to contract to test if it from address 1 prank
+- Signature -  function testSignature() public {
+-      uint256 privateKey = 123;
+-         // Computes the address for a given private key.
+-         address alice = vm.addr(privateKey);
+- 
+-         // Test valid signature
+-         bytes32 messageHash = keccak256("Signed by Alice");
+- 
+-         (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, messageHash);
+-         address signer = ecrecover(messageHash, v, r, s);
+- 
+-         assertEq(signer, alice);
+- 
+-         // Test invalid message
+-         bytes32 invalidHash = keccak256("Not signed by Alice");
+-         signer = ecrecover(invalidHash, v, r, s);
+- 
+-         assertTrue(signer != alice);
+-     }
+- Test for ERC20Permit + fee 
+	https://github.com/t4sk/hello-foundry/blob/main/test/app/GaslessTokenTransfer.t.sol
+- Fork:
+	We can fork from chain with setting a FROK_URL= provider , and then running command:
+	forge test —fork-url $FROK_URL —match-path test/NameTest.t.sol
+- Fuzz testing: Testing contract with random inputs 
+	We can create a helper function with logic and then 
+	put an input of a test function (uint256 x)
+	mv.assume (x > 0); // we can set to be greater then a value
+	x = bound(x, 1, 10); // or between values
+	uint I = contract.func(x);
+	assertEq(I , helperFunc(x));
+	Returns (runs: 256(how many inputs), u: 13123(average gas ‘total gas/times it run), ~: 13424 (median gas , the gas of in the half)
+- Invariant - a random input is in function and this function is Called multiple times + the functions are randomly executed by order, after functions are called some checks will run and if they all pass then the invariant test will pass. Calls functions in contract randomly.
+- Handler based testing - make a contract , make inputs in function with bound (…) and then call the actual contract. After that make Invariant test for the contract with bound inputs that calls the contract we wanna test. ^targetContract(…)
+	^targetSelectors(…
+- FFI - run document 
  
 
 
