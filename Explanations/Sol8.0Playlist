@@ -166,70 +166,6 @@ in 0.8 fallbacks can take inputs as bytes and return outputs as bytes
 We can create  proxy without assembly 
 But we can still cannot return data with receive function!
 
-https://github.com/t4sk/hello-foundry
-
-^^^ Foundry Test:
-1 - name the file - Contract.t.sol
-2 - Import the Test and the contract we wanna test
-3 - make “setUp”  function that execute EVERY time before each function and deploys a new contract 
-4 - make function with name “testFuncName” / “testLogic”
-5 - if you expect function to give error - “testFailName” 
-6 - other way to handle error is “vm.expectRevert()” - no need to name function with Fail
-- There is verbosity option -v to -vvvvv , each giving more information 
-- Gas info —gas-report 
-- In foundry.toml file you can specify the sol version - solc_version = “0.8.17”, compile & build will fail if we use different version
-- Importing - get lib with forge install …., then import autoaticly from library by /libName/Contract.sol. 
-- Remapping , when installing npm packages , we need to make “remapping.txt” file and type - @openzeppelin/=node_modules/@openzeppelin
-- Importing openzeppeling with node npm i openzeppelin, import”@opeznzeppelin/contracts/contrac.sol”
-- Fomrtaing text use command - forge fmt
-- We can console log things - import “forge-std/console.log”; , make sure you remove before deploying contracts. Use -vv at test to log, we can log in the test too! To log “int” we need special function!
-- Call function from different address - vm.startPrank(address(1)) to stop using this address - vm.stopPrank(): To use only for one call we use vm.prank(address(1)) If we don’t specify address it will be executed from the contract address
-- To make test with error you can name it - testFail… or add in the code - vm.expectRevert() We can add the msg with require  - vm.expectRevert(bytes(“This is test error”)); err.throwError(); For custom - vm.expectRevert(Error.CumstomError.selector);   err.throwCustumError();
-- We can label - assertEq(uint256(1), uint256(1), “test 1”); - it will show as test one fails if there are multiple assertEqs.
-- Events - 1st type the data you expect, then emit the event and then call the function you expect to emit the event with the data 
-- Time - vm.wrap - set the block timestamp  in the future  vm.roll - set block number skip(number) - increment current timestamp rewind(number) - decrement current timestamp
-- Sending ETH - deal(address(1),100); - sets balance of address (no matter how big it was)
-	assert(address(1).balance, 100);
-	^ hoax - deal + prank, sets up prank and set balance 
-	hoax(address(1), 123)
-	_send(123);   - function that sends ETH to contract to test if it from address 1 prank
-- Signature -  function testSignature() public {
--      uint256 privateKey = 123;
--         // Computes the address for a given private key.
--         address alice = vm.addr(privateKey);
-- 
--         // Test valid signature
--         bytes32 messageHash = keccak256("Signed by Alice");
-- 
--         (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, messageHash);
--         address signer = ecrecover(messageHash, v, r, s);
-- 
--         assertEq(signer, alice);
-- 
--         // Test invalid message
--         bytes32 invalidHash = keccak256("Not signed by Alice");
--         signer = ecrecover(invalidHash, v, r, s);
-- 
--         assertTrue(signer != alice);
--     }
-- Test for ERC20Permit + fee 
-	https://github.com/t4sk/hello-foundry/blob/main/test/app/GaslessTokenTransfer.t.sol
-- Fork:
-	We can fork from chain with setting a FROK_URL= provider , and then running command:
-	forge test —fork-url $FROK_URL —match-path test/NameTest.t.sol
-- Fuzz testing: Testing contract with random inputs 
-	We can create a helper function with logic and then 
-	put an input of a test function (uint256 x)
-	mv.assume (x > 0); // we can set to be greater then a value
-	x = bound(x, 1, 10); // or between values
-	uint I = contract.func(x);
-	assertEq(I , helperFunc(x));
-	Returns (runs: 256(how many inputs), u: 13123(average gas ‘total gas/times it run), ~: 13424 (median gas , the gas of in the half)
-- Invariant - a random input is in function and this function is Called multiple times + the functions are randomly executed by order, after functions are called some checks will run and if they all pass then the invariant test will pass. Calls functions in contract randomly.
-- Handler based testing - make a contract , make inputs in function with bound (…) and then call the actual contract. After that make Invariant test for the contract with bound inputs that calls the contract we wanna test. ^targetContract(…)
-	^targetSelectors(…
-- FFI - run document 
- 
 
 
 
