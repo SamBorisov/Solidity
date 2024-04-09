@@ -165,6 +165,7 @@ We can use the operator ‘or’ instead of add
 in 0.8 fallbacks can take inputs as bytes and return outputs as bytes
 We can create  proxy without assembly 
 But we can still cannot return data with receive function!
+^.selector - gives the 1st 4 bytes that define the function name, it will not give anything if function is internal or private 
 
 
 
