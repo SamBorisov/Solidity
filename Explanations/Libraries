@@ -23,4 +23,5 @@ It defines a standard way to structure, encode, and hash data before it is signe
  - BLS - ways to save signatures that take less space in the blockchain, used by the validators 
 
  - ERC165 - standard for interfaces - check if contract supports an interface - good for a marketplace to see if a contract by user supports the basic function:
-For example, an ERC721 can use the marketplace for the contract, the buttons to work, and so on.
+For example, an ERC721 can use the marketplace for the contract, the buttons to work, and so on. (has the base functions)
+Note: If the function logic is different the interface function will still pass (say it supports the interface) if it has the same name and input!
