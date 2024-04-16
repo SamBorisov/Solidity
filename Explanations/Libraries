@@ -8,6 +8,7 @@ Libraries and how to use them
   - ERC20PresetMinterPauser - burnable, mintable, pausable token ERC20
 
  - SafeMath - To prevent overflows and underflows using this library
+ - SafeMathInt - check if int is positive, if not reverts (cuz could make it -10 = 10, not safe, Other checks if there is no overflow. Cuz unit could be bigger in positive numbers than int
  - TransferHelper - To make sure your transfer was executed correctly
 Secure double-spending, attacks, does not return bool false when a transaction fails 
 
@@ -19,3 +20,7 @@ The main goal of EIP-712 is to ensure that both the message sender and the messa
 It defines a standard way to structure, encode, and hash data before it is signed, ensuring consistency across different implementations.
 
  - ECDSA - used to verify signatures, recover a signer from a signature, and more
+ - BLS - ways to save signatures that take less space in the blockchain, used by the validators 
+
+ - ERC165 - standard for interfaces - check if contract supports an interface - good for a marketplace to see if a contract by user supports the basic function:
+For example, an ERC721 can use the marketplace for the contract, the buttons to work, and so on.
