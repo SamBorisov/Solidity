@@ -25,3 +25,9 @@ It defines a standard way to structure, encode, and hash data before it is signe
  - ERC165 - standard for interfaces - check if contract supports an interface - good for a marketplace to see if a contract by user supports the basic function:
 For example, an ERC721 can use the marketplace for the contract, the buttons to work, and so on. (has the base functions)
 Note: If the function logic is different the interface function will still pass (say it supports the interface) if it has the same name and input!
+
+ - Initializable - base contract for initializing upgradable contract, works as constructor and the idea is to have a function that is called only once
+initializer modifier idea is to be in the child component only
+for all parents, we should call the modifier onlyInitializing
+reinitializer - update the version of the contract
+We can add a constructor/function that has _disableInitializers - so we can be sure the contract won't have other versions 
