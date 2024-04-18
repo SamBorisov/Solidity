@@ -208,12 +208,12 @@ _msgSender()  & _msgData - function to be able to change if we want to pay from 
 
 
 
-_Attacks - 
+_Attacks - Re Enracny:
 Cross re-entrancy attack: having 2 functions, one we call get something from it (ETH), trigger a receive function and call another (while the 1st one is still not complete and not updated the state of our balance ‘even if we have re-entrancy Gard modifier’)
 Cross contract also works - be aware of storage and how contracts interact with each other.
 Read only re-entrancy - if our functions depend on a view function, then that view function (if the state in it is not updated ’the view function will return the same’ before the external function ends, there is a way to call other/same function that relays on that view function, even if the view function is not correct) - if we need the output of the function we can save it in a var, then update it and then make the call for sending ETH.
 
-
+Logic of an Attacker - what benefit could I have if I know this function update start from x to y, can I use a call for another function to take advantage of this state update? 
 
              
  
