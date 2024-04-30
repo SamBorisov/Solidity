@@ -1,0 +1,28 @@
+Keyword list: https://www.evm.codes/
+Examples: https://solidity-by-example.org/assembly-variable/
+https://solidity-by-example.org/app/assembly-bin-exp/
+
+__________ Assembly could be gas efficient to use, however, it could also open vulnerabilities __________
+
+Notes:
+- There is no “else” in the assembly 
+If we have only 2 cases, we can in solidity make on logic and with assembly check if stamens, if the “if” statement passes assembly will do the logic differently, if not it will stay the same as solidity logic:
+z = y;
+Assembly {
+	if lt(x , y) {
+		z := x
+}}
+
+- there is no While, but we can create one with a 'for' loop, by using only the middle of the loop:
+assembly {
+            let i := 0
+            for {} lt(i, 5) {} {
+                i := add(i, 1)
+                z := add(z, 1)
+            }
+
+- We need to add checks for underflow or overflow, for each action we do! Assembly does not do it
+
+
+- Giving error is easy as typing 'revert' and passing parameters:
+  if gt(x, 10) { revert(0, 0) }
