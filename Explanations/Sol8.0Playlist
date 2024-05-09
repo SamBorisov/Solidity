@@ -215,5 +215,9 @@ Read only re-entrancy - if our functions depend on a view function, then that vi
 
 Logic of an Attacker - what benefit could I have if I know this function update start from x to y, can I use a call for another function to take advantage of this state update? 
 
+
+try {} catch - if we expect to have a revert somewhere in our code we can do try/catch and execute a different logic if some functions fails or not
+HACK: if there's a ban function on user (but he uses smart contract and has receive function that always reverts) if our ban send him remaining ETH it will revert always and we won't be able to ban it!
+By using try catch we can avoid this kind of hack and users can be banned!
              
  
