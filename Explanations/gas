@@ -88,3 +88,94 @@ var gasCostInEther = web3.utils.fromWei((gasEstimate * gasPrice), 'ether');
 Let’s apply our gas estimation functions to estimating the gas cost of our Faucet example, using the code from the book’s repository.
 
 Start Truffle in development mode and execute the JavaScript file in gas_estimates.js: Using the estimateGas function, gas_estimates.js.
+
+
+
+
+
+Gas optimization course
+
+Main things:
+1 - Deployment (smaller contrast, better)
+2 - Transaction data sent
+3 - Amount of memory that was used 
+4 - Storage
+5 - State changes that took place 
+6 - Op-codes that are executed
+
+____
+When you transfer ETH only it always costs 21k gas, every ETH transaction should cost 21k gas min
+Gas is how much computing power it needs to execute 
+(ERC costs more than transferring ETH)
+Calc gas - gas price * ether price * gas cost (used by execution)
+Gas prices vary on how loaded the blockchain is
+
+Ethereum limits the amount of computations per block (gas)
+If a block has too many, it will be difficult for nodes to verify the transactions
+The block limit is 30 million gas (vary)
+If we use only ETH transfers 21k gas we can fit 1428 transfers in one block
+
+New block - every 15 seconds on ETH
+Throughput 2 - 95, transactions per second, average 13
+If a transaction cannot fit into the block it will revert
+____
+
+With You, we can see a slot of a variable! 
+slotLocation := varName.slot
+
+Op-codes - the more you execute the more expressive the function will be
+Each op-code costs a different amount of gas, and optimizing the op-codes saves a lot of gas
+Transactions in the bytecode hashed by: funcName(type1,type2)
+Saving the transaction data into the blockchain costs gas, by giving the function hashed bytecode it saves the bytes, and that costs around 60+ gas (each byte in the transaction data costs gas, non zero bytes are more expensive)
+Memory:
+The 1st 64 bytes are for scratch space hashing methods 
+Memory slots - 32 bytes
+Every time we expand the memory by 32 bytes we pay 3 gas (if we try to access a memory location it does 3 gas for each previous slot when accessing it)
+
+A payable function is cheaper, because when a non-payable function is executed there are few op-codes that check if we have CALLVALUE and check if it is 0, and if it is not 0 we revert!
+
+Adding an unchecked block when doing the math it does less opcodes cuz it need to check after each action if the number fit into the size of the variable.
+If we have tokens that are less then the max unit256 and there is not mint function, when we can put an unchecked function where we add tokens to the account, cuz we know we can never exceed it!
+
+The 21k gas:
+1 - transaction is well-formed (no additional training bytes)
+2 - valid signature
+3 - valid nonce
+4 - the sender account has no contract code deployed (EIP-3607)
+5 - the has limit is smaller than the intrinsic gas, used for a transaction
+6 - the sender has enough to cover the cost
+
+When creating a contract we have to pay extra gas
+
+EIP-1559:
+A portion of the transaction is burned, not going all to the miner
+BASE_FEE - varies for every block (min fee) - it is burned!
+MAX_FEE - should be higher than base, it is not good practice to put just a little bit higher than base, cuz the base fee could go up and our transaction could not be executed
+PRIOTIRY_FEE - like a tip to a miner (amount of the leftover he will take)
+
+MAX_FEE - BASE_FEE = leftovers - PRIORITY_FEE = refund 
+(if PRIORITY_FEE is bigger than leftovers, then the miner will get all the leftovers and there’s no refund)
+
+Optimizer:
+By default: 200 - make the data for deployment less and it costs less to deploy
+If we increase the value of the optimizer we get a more costly contract to deploy but cheaper functions
+Tip:
+Deploy with different optimizers and see when the cost of the transactions stops going down, it could cost more to deploy the contract but users and us who interact with it, would be cheaper. And for widely spread contract that people interact with, it is always the best to cut the costs of the functions!
+(Set it as height as possible until you stop seeing improvement)
+
+
+STORAGE
+_________
+
+1 - Setting Storage from 0 to non-zero - 20k
+2 - Setting Storage from non-zero to non-zero - 5k
+3 - Setting Storage from non-zero to zero - Refund
+4 - Setting Storage to save value - 100
+
+Pay 2,1k if 1st time accessing a variable in the transaction 
+Pay 100 more if it was already touched
+
+Ethereum treads all Stored variables by storage slots of 32bytes
+So even if we use different types or smaller units, gas costs stay the same!
+
+If we access a storage var and we expect it to not change we can add an if statement that is not = ‘already accessed var’ and save even more gas
