@@ -176,6 +176,103 @@ Pay 2,1k if 1st time accessing a variable in the transaction
 Pay 100 more if it was already touched
 
 Ethereum treads all Stored variables by storage slots of 32bytes
-So even if we use different types or smaller units, gas costs stay the same!
+So even if we use different types or smaller units, gas costs stays the same!
 
-If we access a storage var and we expect it to not change we can add an if statement that is not = ‘already accessed var’ and save even more gas
+If we access a storage var and we expect it to not change we can add if statement that is not = ‘already accessed var’ and save even more gas
+
+Array Storage
+____________
+
+When we store the length of the array we access storage so it costs 22k
+Then 22k for saving 1 value in the array, the longer the array the more expensive 
+If we try to change the array to same value - it will cost 2100 for reading cold storage and then 100 to write the same value
+If we know the previous values will be the same, we can push it will be cheaper then writing same values
+
+Array Looping
+____________
+
+!_ If we cash the length if the array and use it for loop it will be cheaper then accessing it every time!
+It works when the array has dynamic length and we know it won’t change in the function!
+If we have fixed length the compiler already knows the length of the array
+
+
+Refund Storage
+_____________
+
+Before it used to be 15k , now 4800
+When setting value to non-zero to zero value
+It still takes gas to access cold storage and write/read, so the whole action won’t  just refund us gas, but most likely to reduce the overall gas for this action
+
+1 Deleting an array or setting many values to zero could be very expensive (20% rule)
+2 Setting up one var to 0 is okay, but multiple is it not, cuz the costs goes is like setting to non-zero 3 to non-zero (20% rule) , cannot capture the whole refund 
+4 For every 0 operation try to spend 24k gas elsewhere (txn cost, or setting zero to non-zero) to get multiple refunds
+5 Counting down is more efficient than counting up
+
+
+ERC20 Transfers
+______________
+
+Same function has different gas, cuz:
+Some values we are setting from 0 to non-zero (expensive ~22k)
+Other from non-zero to non-zero (normal ~5k)
+From non-zero to 0 - refund (~200)
+
+Struct Storage
+_____________
+
+For each value of the structure we have normal 5k or 22k (depending on non-zero to zero or the opposite) and 100 If it is the same value
+
+If we have long string more than 32 bytes it will take more storage places and the length
+If we have address and after that a bool, it will be saved in one storage slot “cuz both are under 32 bytes”
+
+Packing Variables
+_______________
+
+When using multiple variables less then 32 bytes that can fit in one slot, we have all of them in the slot and if we access the slot we see weird value, but if we access it with the “Offset” we get the value we need. Each value is stored in the storage then in offset.
+If we save both values in same slot and we access/change then in different places it will be more expensive, cuz we access storage slot then access the offset
+If we access then and change them in one place or structure then it will be more efficient and makes logic to save them in one slot and writing one slot only
+
+
+Memory
+_______
+
+Calldata is cheaper but cannot be changed - they are ready only
+Memory saves the value in the memory and an modify it, but it is more expensive 
+Memory is cheaper then using calldata and then saving the data from calldata to memory 
+
+The more memory we allocate the more expensive it gets, if we hit a + [a2/512]
+Then the gas cost will start being more and more expensive and if we use too much memory, it might not fit the block and it will revert
+
+
+Solidity does not delete memory when deleted,
+So when we use long array and then get data and we no longer need to use the array and want to use another var , it will just use more memory but not clear the old one.
+Be carful with allocating memory again and again, cuz it could hit the “Quadratic portion” of the formula and become super expensive.
+
+If you wanna reuse memory you can manly do it with YUI 
+
+Solidity tricks
+_____________
+
+_Names_
+Compiler check the selected function by the function selector and if it is the correct it execute it
+From smaller to bigger (selector)
+A functions that we use frequently would be good to be with names, so the selectors are on the top for the compiler
+
+_<=>!_
+< and > are more efficient then <= or =>
+X < 3 better than x <= 2
+== / != better than > <
+
+_Shifting_
+When multiplying and dividing, the compiler is shifting the bits
+If we shift them we save 2 gas for multiply and 5 gas for divide
+But we can overflow a multiply shifting and we need extra check after that
+
+_Revert_
+If we have all the revert statements before any main logic executes we can save a lot of gas, especially when we write on storage. 
+However it is best practice to make functions gas efficient for success, not revert. And be sure the logic is correct
+
+_&& ||_
+- When having an && / || operations it is good practice to put the most gas efficient logic 1st, so it will have higher chance to skip the second one that is more costly.
+- Be aware that is a good practice to put 1st the one that is most likely to fail to avoid the second one that will rarely fail. 
+*Decide based on both 
