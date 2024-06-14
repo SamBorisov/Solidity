@@ -1,0 +1,41 @@
+$Flash Loans hacks:
+Users can manipulate oracles with a lot of tokens
+Users can liquidate or take advantage of governances 
+Users can pump a price of a token and then play with it
+It could be used as voting power and to propose a fake proposal
+Re-entrancy Attacks
+Pass data as approve function
+Take advantage of the fee and borrowers (use msg.sender, not address receiver)
+Protect:
+(Add logic to function that could be damaged from borrowing a modifier areFundsLended)
+This way it checks if the money is borrowed and does not execute.
+Make sure people cannot do re-entracy and repay with another loan.
+When borrowing, make sure only the lending protocol can call your function & only you can call it
+On ERC20, require(IERC20(token).transferFrom(address(receiver), this.address, amount + fee) so the borrower needs just to give allowance and you will make sure the money are returned.
+Check that the borrower returns - keccack256("ERC3156FlashBorrower.onFlashLoan")
+
+
+
+$Inflation attack:
+If a vault is using the balanceOf(token) for calculation on shares:
+A hacker can fronton a deposit when depositing 1 amount for 1 share, then sending the vault tokens with transfer (amount of the other user, lets say 100)
+Then when the user deposits the 100 shares he will not have shares and since the hacker has all the shares he can withdraw all tokens!
+Also, it is possible for sandwich attacks if we are using shares
+__!!! Do not use BalanceOf(), use inside contract counters for balances and shares
+- Could also use ‘dead shares’ the contract deposits 1st
+- Min shares - user cannot gain 0 shares when depositing
+
+
+$Permit + WETH attack:
+If we have a fallback function  that executes (normal deposit) in WETH
+In our contract where we use a permit, but the WETH doesn’t have a permit (if one user already allowed the contract to use all tokens) the attacker could use this fallback function 
+(so permit won’t ever) in that way, he can increase the balance to himself and then withdraw it (passing himself as a spender)
+__!! Check for a fallback function before working with tokens with a permit (don’t work with all tokens)
+__If the function should allow the contract to spend the tokens, then don’t use spender as input on the function
+__Check that the permit function  is executed, not any other fallback
+
+
+
+$Approval attack:
+If the user approves more tokens and then wants to approve less, the spender could front-run his second allowance and use all tokens before the second allowance and then use the tokens from the second allowance 
+___! Use safeDecreseAllowance from openZeppelin so it checks the current allowance
