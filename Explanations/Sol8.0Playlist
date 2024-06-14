@@ -220,4 +220,11 @@ try {} catch - if we expect to have a revert somewhere in our code we can do try
 HACK: if there's a ban function on user (but he uses smart contract and has receive function that always reverts) if our ban send him remaining ETH it will revert always and we won't be able to ban it!
 By using try catch we can avoid this kind of hack and users can be banned!
              
- 
+////////// Transient stage ///////////
+Data is cleared only after a transaction (not after a function like memory)
+Using assembly we can sore in a slot and tstore(SLOT, data)
+It is used to save gas 
+Remix VN Cancun + EVM VERSION - cancun
+
+
+
