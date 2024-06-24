@@ -1,0 +1,12 @@
+https://www.evm.codes/
+
+Postman post to node:
+{
+  "jsonrpc": "2.0",
+  "method": "debug_traceTransaction",
+  "params": ["0xTX_HASH", {}],
+  "id": 1
+}
+
+Create script or use online for function selectors:
+https://www.evm-function-selector.click/
