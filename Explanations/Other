@@ -248,6 +248,18 @@ Upgradable:
 When initializing a variable in an upgradable contract, if it is not constant, then it will be 0; 
 Because variables are set when we call the constructor by default, but upgradable contracts do not have a constructor, we need to initialize them by the initializer, else they will be 0;
 Constants do not have this problem, since they do not charge and are part of the code! The constructor does not set them!
+
+Initializing:
+Usually, we have to import every init from the contracts we inherited.
+If a contract is inherited only once, it should be imported in the _init of the contract it goes, and this _init should be!
+If one contract is imported in many others, it should be included in the top contract, so it is not initialized multiple times.
+But the problem is that in the contract to init, it needs another contract that is in, and it will init multiple times!
+
+It is good practice to call with _INIT every contract we import in-outs. And call _unchaned only the current contract.
+If there is a repeating contract, it is good to import in the next level and _init it there so it does not _init multiple times!
+
+The less init we do, the more gas we save!
+_________________________________________
    
 nodes, blocks, transactions 
 
