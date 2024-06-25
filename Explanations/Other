@@ -242,9 +242,12 @@ we could see them used to protect people's data during online activity.
       Supply chain - insert  toxic code into developers without them knowing
       DDoS - server is down/slowed cuz A LOT hacked PCs/bots trying to enther and do something at the same time
       Phishing - trick victims to reveal passords/keyworkds or any private information (emial/fake links..)
-      50% attack - trying to take over over the network with having control over more then half of the network
+      50% attack - trying to take over the network with having control over more then half of the network
       
-      
+Upgradable:
+When initializing a variable in an upgradable contract, if it is not constant, then it will be 0; 
+Because variables are set when we call the constructor by default, but upgradable contracts do not have a constructor, we need to initialize them by the initializer, else they will be 0;
+Constants do not have this problem, since they do not charge and are part of the code! The constructor does not set them!
    
 nodes, blocks, transactions 
 
