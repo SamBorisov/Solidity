@@ -1,0 +1,61 @@
+
+
+______________________ Upgradability Types ______________________
+
+1 - Parametrise - state variables could be changed in function in a way that affects rewards or given things 
+2 - Migration - creating a new contract and telling people this is the new contract, they should use it
+3 - Proxy - use delegate call to another contract but saves all state variables in the proxy in that way when we upgrade we can deploy a new contract and point the poxy call to go to the new address while keeping all the data. But it is risky.
+- Storage clashing - we need to be careful with the slots of the stage 
+- Function selector clashing - multiple functions could have the same function selector 
+- (we can set admins to call only admin functions and user-only user functions, but in that way, admins cannot participate),
+- ! UUPS - puts all the logic of upgrading into the implementation and gas efficient for checks (but If you deploy implementations contract without any upgradable functions you are stuck)
+- Diamond - multiple implementation, shards 
+
+
+_______ Gap _______
+
+__gap - storage gaps for upgradable contracts, so when we add variables it won’t affect the current one, when we deploy a new contract (upgrade) with an extra variable, we need to make the gap less, depending on how many variables we have, we also need to add it in the end always!
+The gap can saved as unit256 is saving 32 bytes for each storage, so in one slot we can have 2 vars that are 16 bytes or 4 vars of uint8, and so on. We reduce the _gap[num] when the 32 bytes of the previous finishes
+contract Base {
+    uint256 base1;
+    address base2; // 20 bytes
+    uint256[48] __gap; // array always starts at a new slot
+}
+contract Base {
+    uint256 base1;
+    uint128 base2a; // 16 bytes
+    uint128 base2b; // 16 bytes - continues from the same slot as above
+    uint256[48] __gap;
+}
+_unchained - in normal _int, we need to call the init of all child components, but when we have the same child in multiple contracts, we can call unchained to make sure we do not call other inits multiple times (safe gas)
+_msgSender()  & _msgData - function to be able to change if we want to pay from someone’s transaction but to put the user or some contract as the address (abstract contract, we need to add custom logic to work in a different way)
+
+
+_______ Functions _______
+
+- Problem, if we upgrade with func to another contract and the storage is different (the position or there are missing things in the storage on the upgraded contract), then we could be bug so functions does not execute well and type in the wrong way! (Slots for storage problem)
+We use here fallback/recieve function to call implementation contract like:
+(Bool ok, bytes memory res) = addressImplement.delegatecall(msg.data)
+Require (ok , “failed”)
+Also fallback function does not return any data!
+
+
+_______ Variables _______
+
+When initializing a variable in an upgradable contract, if it is not constant, then it will be 0; 
+Because variables are set when we call the constructor by default, but upgradable contracts do not have a constructor, we need to initialize them by the initializer, else they will be 0;
+Constants do not have this problem, since they do not charge and are part of the code! The constructor does not set them!
+
+
+_______ Initlizing _______
+
+Usually, we have to import every init from the contracts we inherited.
+If a contract is inherited only once, it should be imported in the _init of the contract it goes, and this _init should be!
+If one contract is imported in many others, it should be included in the top contract, so it is not initialized multiple times.
+But the problem is that in the contract to init, it needs another contract that is in, and it will init multiple times!
+
+It is good practice to call with _INIT every contract we import in-outs. And call _unchaned only the current contract.
+If there is a repeating contract, it is good to import in the next level and _init it there so it does not _init multiple times!
+
+The less init we do, the more gas we save!
+_________________________________________

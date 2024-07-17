@@ -1,0 +1,16 @@
+{
+  "name": "solidity",
+  "version": "1.0.0",
+  "description": "*** This repository is made for learning! You can see here:  - simple contracts  - examples  - scripts  - documentation  - tricks  - and a lot of information",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.6"
+  }
+}

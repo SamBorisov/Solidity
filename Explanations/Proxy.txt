@@ -1,0 +1,85 @@
+_________ Key Concepts of a Proxy in Solidity _________
+
+ - - - Proxy Contract - - - 
+This contract acts as an intermediary that delegates all incoming calls to the implementation contract.
+It contains minimal logic, primarily focusing on forwarding calls.
+
+ - - - Implementation Contract - - - 
+This contract contains the actual business logic and state variables.
+It can be replaced with a new implementation to upgrade the functionality without changing the proxy contract's address.
+
+ - - - Delegation - - - 
+The proxy uses the delegatecall opcode to execute functions from the implementation contract in the context of the proxy. This means that storage, msg.sender, and msg.value are preserved as if the function were called directly on the proxy.
+
+
+_________ Minimal Proxy _________
+
+- The right way is the use minimal proxy from Openzeppelin with assembly code that loads to memory slot 1 the data from 0 to calldatasize/retrundatasize and we can return it, that way our functions do write in the storage of the contract
+Code:
+assembly {
+            // Copy msg.data. We take full control of memory in this inline assembly
+            // block because it will not return to Solidity code. We overwrite the
+            // Solidity scratch pad at memory position 0.
+
+            // calldatacopy(t, f, s) - copy s bytes from calldata at position f to mem at position t
+            // calldatasize() - size of call data in bytes
+            calldatacopy(0, 0, calldatasize())
+
+            // Call the implementation.
+            // out and outsize are 0 because we don't know the size yet.
+
+            // delegatecall(g, a, in, insize, out, outsize) -
+            // - call contract at address a
+            // - with input mem[in…(in+insize))
+            // - providing g gas
+            // - and output area mem[out…(out+outsize))
+            // - returning 0 on error (eg. out of gas) and 1 on success
+            let result :=
+                delegatecall(gas(), _implementation, 0, calldatasize(), 0, 0)
+
+            // Copy the returned data.
+            // returndatacopy(t, f, s) - copy s bytes from returndata at position f to mem at position t
+            // returndatasize() - size of the last returndata
+            returndatacopy(0, 0, returndatasize())
+
+            switch result
+            // delegatecall returns 0 on error.
+            case 0 {
+                // revert(p, s) - end execution, revert state changes, return data mem[p…(p+s))
+                revert(0, returndatasize())
+            }
+            default {
+                // return(p, s) - end execution, return data mem[p…(p+s))
+                return(0, returndatasize())
+            }
+
+
+_________ Setting Up _________
+
+We have Constructor into the beacon that disables the initlizers - cuz we do not need to initlizer anything or we can do it in the constructor (and to protect from future problems)
+We also add initlize function so the Proxies can call it (cuz the constructor is non-existent in them)
+Constant Var and Immutable Vars that are set into the constructor are not saved in Storage as normal var, but in the bycode of the contract, so calling a delegate call to immutable vars , we will use the beacon Var!
+Immutable can be only set in the Constructor!!!! And it stays as part of the code so each clone will have the same value!
+
+
+ - - - Beacon Proxy - - - 
+
+We can upgrade all implementations in one function
+Using a beacon is a smart way for creating implementation and upgrading it. Since the proxies do not hold the address of the implementation, but they have reference to the beacon, when we change the beacon, all proxies will use the new logic in one transaction
+
+
+ - - - Transparent proxy - - - 
+
+Proxy that has the upgrade function: 
+If called by admin (proxy admin contract that also deploys) the call will upgrade, if not, it will delegate-call
+It is very expensive - every time we check if the caller is admin, check storage vars
+
+
+ - - - UUPS proxy - - -  
+
+Тhe upgrade function is in the implementation
+Implementation can upstage all Proxies with the upgrade function
+We can customise authorisation here
+But: Add more complexity and vulnerability risk
+If we forget to add the upgrade function in the new implementation, we will never be able to upgrade it
+Also each new implementation will cost more, because of the upgrade function

@@ -1,3 +1,16 @@
+ -  -  - Logic of an Attacker -  -  - 
+what benefit could I have if I know this function update start from x to y, can I use a call for another function to take advantage of this state update? 
+
+
+   Security Attacks - passive / active
+      Ransomware - locks , encrupts..data for money 
+      cryptojacking - using other people devices for minning without them knowing
+      Supply chain - insert  toxic code into developers without them knowing
+      DDoS - server is down/slowed cuz A LOT hacked PCs/bots trying to enther and do something at the same time
+      Phishing - trick victims to reveal passords/keyworkds or any private information (emial/fake links..)
+      50% attack - trying to take over the network with having control over more then half of the network
+
+
 $Flash Loans hacks:
 Users can manipulate oracles with a lot of tokens
 Users can liquidate or take advantage of governances 
@@ -39,3 +52,25 @@ __Check that the permit function  is executed, not any other fallback
 $Approval attack:
 If the user approves more tokens and then wants to approve less, the spender could front-run his second allowance and use all tokens before the second allowance and then use the tokens from the second allowance 
 ___! Use safeDecreseAllowance from openZeppelin so it checks the current allowance
+
+
+$Re-Enracny:
+Cross re-entrancy attack: having 2 functions, one we call get something from it (ETH), trigger a receive function and call another (while the 1st one is still not complete and not updated the state of our balance ‘even if we have re-entrancy Gard modifier’)
+Cross contract also works - be aware of storage and how contracts interact with each other.
+Read only re-entrancy - if our functions depend on a view function, then that view function (if the state in it is not updated ’the view function will return the same’ before the external function ends, there is a way to call other/same function that relays on that view function, even if the view function is not correct) - if we need the output of the function we can save it in a var, then update it and then make the call for sending ETH.
+
+
+
+try {} catch - if we expect to have a revert somewhere in our code we can do try/catch and execute a different logic if some functions fails or not
+$Try-Catch HACK: if there's a ban function on user (but he uses smart contract and has receive function that always reverts) if our ban send him remaining ETH it will revert always and we won't be able to ban it!
+By using try catch we can avoid this kind of hack and users can be banned!
+
+
+$Tornado cash hack:
+We create the address is calculated by deployer address and nonce - if the was 1st deployed contract then it is 0. Once a user calls self-destruct to a contract then the nonce of this contract won’t count so if he had 1 deployed contract and call self-destruct the nonce will be still 0. 
+He proposed a nice contract with address that got approved for the main contract with delegate call, then he deleted this contract and deployed new one with bad code with the same address, that way he managed to hack the contracts!
+   How to prevent?
+- Carefully choose addresses of proposes and to who they are
+- Avoid contracts with self-destruct
+- Add event listener to the contract if self-destruct is called and if so, update the main contract to not work with this address
+- Avoid delegate calls 

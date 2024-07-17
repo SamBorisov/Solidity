@@ -1,0 +1,297 @@
+    
+    Is there a difference in cost between the functions of creating a new state variable or changing it?
+Yes. Creating is more expensive than changing.
+
+_______________ Sturct packing to save gas _______________
+
+There are other types of uints: uint8, uint16, uint32, etc.
+
+Normally there's no benefit to using these sub-types because Solidity reserves 256 bits of storage regardless of the uint size. For example, 
+using uint8 instead of uint (uint256) won't save you any gas.
+
+But there's an exception to this: inside structs.
+
+If you have multiple uints inside a struct, using a smaller-sized uint when possible will allow Solidity to pack these variables together to take up less storage. For example:
+
+struct NormalStruct {
+  uint a;
+  uint b;
+  uint c;
+}
+
+struct MiniMe {
+  uint32 a;
+  uint32 b;
+  uint c;
+}
+
+To use this method is good to use when we need properties of the struct at once (cuz we make one action to go to the storage and then another to split it between all variables)
+In that way when we need only one property it will be more expensive to access it, cuz we need to access the storage and then the offset of the property. (Other then just read the property)
+
+// `mini` will cost less gas than `normal` because of struct packing
+NormalStruct normal = NormalStruct(10, 20, 30);
+MiniMe mini = MiniMe(10, 20, 30); 
+For this reason, inside a struct you'll want to use the smallest integer sub-types you can get away with.
+
+You'll also want to cluster identical data types together (i.e. put them next to each other in the struct) so that Solidity can minimize the required storage space. 
+For example, a struct with fields uint c; uint32 a; uint32 b; will cost less gas than a struct with fields uint32 a; uint c; uint32 b; 
+because the uint32 fields are clustered together.
+
+_______________ View Functions _______________
+
+View functions don't cost any gas when they're called externally by a user.
+!!!But they still require gas to run, so when we call them inside our contract we need to make sure they are optimized to save gas.
+
+They do not cost gas externally is because view functions don't actually change anything on the blockchain – they only read the data. 
+So marking a function with view tells web3.js that it only needs to query your local Ethereum node to run the function, 
+and it doesn't actually have to create a transaction on the blockchain (which would need to be run on every single node, and cost gas).
+
+_______________ Events _______________
+
+Because you can use this method to query the event logs since the beginning of time, this presents an interesting use case: Using events as a cheaper form of storage.
+
+If you recall, saving data to the blockchain is one of the most expensive operations in Solidity. But using events is much much cheaper in terms of gas.
+
+The tradeoff here is that events are not readable from inside the smart contract itself. 
+But it's an important use-case to keep in mind if you have some data you want to be historically recorded on the blockchain so you can read it from your app's front-end.
+
+For example, we could use this as a historical record of zombie battles — we could create an event for every time one zombie attacks another and who won.
+The smart contract doesn't need this data to calculate any future outcomes, but it's useful data for users to be able to browse from the app's front-end.
+
+______________________ Gas Considerations ______________________
+
+Gas, described in more detail in [gas], is an incredibly important consideration in smart contract programming. Gas is a resource constraining the maximum amount of computation that Ethereum will allow a transaction to consume. If the gas limit is exceeded during computation, the following series of events occurs:
+
+An "out of gas" exception is thrown.
+
+The state of the contract prior to execution is restored (reverted).
+
+All ether used to pay for the gas is taken as a transaction fee; it is not refunded.
+
+Because gas is paid by the user who initiates the transaction, users are discouraged from calling functions that have a high gas cost. It is thus in the programmer’s best interest to minimize the gas cost of a contract’s functions. To this end, there are certain practices that are recommended when constructing smart contracts, so as to minimize the gas cost of a function call.
+
+---Avoid Dynamically Sized Arrays---
+Any loop through a dynamically sized array where a function performs operations on each element or searches for a particular element introduces the risk of using too much gas. Indeed, the contract may run out of gas before finding the desired result, or before acting on every element, thus wasting time and ether without giving any result at all.
+
+---Avoid Calls to Other Contracts---
+Calling other contracts, especially when the gas cost of their functions is not known, introduces the risk of running out of gas. Avoid using libraries that are not well tested and broadly used. The less scrutiny a library has received from other programmers, the greater the risk of using it.
+
+Estimating Gas Cost
+If you need to estimate the gas necessary to execute a certain method of a contract considering its arguments, you could use the following procedure:
+
+var contract = web3.eth.contract(abi).at(address);
+var gasEstimate = contract.myAweSomeMethod.estimateGas(arg1, arg2,
+    {from: account});
+gasEstimate will tell you the number of gas units needed for its execution. It is an estimate because of the Turing completeness of the EVM—it is relatively trivial to create a function that will take vastly different amounts of gas to execute different calls. Even production code can change execution paths in subtle ways, resulting in hugely different gas costs from one call to the next. However, most functions are sensible and estimateGas will give a good estimate most of the time.
+
+To obtain the gas price from the network you can use:
+
+var gasPrice = web3.eth.getGasPrice();
+And from there you can estimate the gas cost:
+
+var gasCostInEther = web3.utils.fromWei((gasEstimate * gasPrice), 'ether');
+Let’s apply our gas estimation functions to estimating the gas cost of our Faucet example, using the code from the book’s repository.
+
+______________________ Gas optimization course ______________________
+
+Main things:
+1 - Deployment (smaller contrast, better)
+2 - Transaction data sent
+3 - Amount of memory that was used 
+4 - Storage
+5 - State changes that took place 
+6 - Op-codes that are executed
+
+_______________ Ethereum Gas Basics _______________
+
+When you transfer ETH only it always costs 21k gas, every ETH transaction should cost 21k gas min
+Gas is how much computing power it needs to execute 
+(ERC costs more than transferring ETH)
+Calc gas - gas price * ether price * gas cost (used by execution)
+Gas prices vary on how loaded the blockchain is
+
+Ethereum limits the amount of computations per block (gas)
+If a block has too many, it will be difficult for nodes to verify the transactions
+The block limit is 30 million gas (vary)
+If we use only ETH transfers 21k gas we can fit 1428 transfers in one block
+
+New block - every 15 seconds on ETH
+Throughput 2 - 95, transactions per second, average 13
+If a transaction cannot fit into the block it will revert
+
+With "Yul", we can see a slot of a variable! 
+slotLocation := varName.slot
+
+_______________ Op-codes _______________
+
+- Op-codes - the more you execute the more expressive the function will be
+- Each op-code costs a different amount of gas, and optimizing the op-codes saves a lot of gas
+
+_______________ Transactions & Functions _______________
+
+- Transactions in the bytecode hashed by: funcName(type1,type2)
+- Saving the transaction data into the blockchain costs gas, by giving the function hashed bytecode it saves the bytes, and that costs around 60+ gas (each byte in the transaction data costs gas, non zero bytes are more expensive)
+- A payable function is cheaper, because when a non-payable function is executed there are few op-codes that check if we have CALLVALUE and check if it is 0, and if it is not 0 we revert!
+- Adding an unchecked block when doing the math it does less opcodes cuz it need to check after each action if the number fit into the size of the variable.
+!If we have tokens that are less then the max unit256 and there is not mint function, when we can put an unchecked function where we add tokens to the account, cuz we know we can never exceed it!
+
+_______________ The 21k Gas _______________
+
+The 21k gas:
+1 - transaction is well-formed (no additional training bytes)
+2 - valid signature
+3 - valid nonce
+4 - the sender account has no contract code deployed (EIP-3607)
+5 - the has limit is smaller than the intrinsic gas, used for a transaction
+6 - the sender has enough to cover the cost
+
+_______________ Deployment _______________
+
+When creating a contract we have to pay extra gas
+
+_______________ Fees _______________
+
+EIP-1559:
+A portion of the transaction is burned, not going all to the miner
+BASE_FEE - varies for every block (min fee) - it is burned!
+MAX_FEE - should be higher than base, it is not good practice to put just a little bit higher than base, cuz the base fee could go up and our transaction could not be executed
+PRIOTIRY_FEE - like a tip to a miner (amount of the leftover he will take)
+
+MAX_FEE - BASE_FEE = leftovers - PRIORITY_FEE = refund 
+(if PRIORITY_FEE is bigger than leftovers, then the miner will get all the leftovers and there’s no refund)
+
+_______________ Optimizer _______________
+
+By default: 200 - make the data for deployment less and it costs less to deploy
+If we increase the value of the optimizer we get a more costly contract to deploy but cheaper functions
+Tip:
+Deploy with different optimizers and see when the cost of the transactions stops going down, it could cost more to deploy the contract but users and us who interact with it, would be cheaper. And for widely spread contract that people interact with, it is always the best to cut the costs of the functions!
+(Set it as height as possible until you stop seeing improvement)
+
+
+STORAGE
+_________
+
+1 - Setting Storage from 0 to non-zero - 20k
+2 - Setting Storage from non-zero to non-zero - 5k
+3 - Setting Storage from non-zero to zero - Refund
+4 - Setting Storage to save value - 100
+
+Pay 2,1k if 1st time accessing a variable in the transaction 
+Pay 100 more if it was already touched
+
+Ethereum treads all Stored variables by storage slots of 32bytes
+So even if we use different types or smaller units, gas costs stays the same!
+
+If we access a storage var and we expect it to not change we can add if statement that is not = ‘already accessed var’ and save even more gas
+
+
+Array Storage
+____________
+
+When we store the length of the array we access storage so it costs 22k
+Then 22k for saving 1 value in the array, the longer the array the more expensive 
+If we try to change the array to same value - it will cost 2100 for reading cold storage and then 100 to write the same value
+If we know the previous values will be the same, we can push it will be cheaper then writing same values
+
+
+Array Looping
+____________
+
+!_ If we cash the length if the array and use it for loop it will be cheaper then accessing it every time!
+It works when the array has dynamic length and we know it won’t change in the function!
+If we have fixed length the compiler already knows the length of the array
+
+
+Refund Storage
+_____________
+
+Before it used to be 15k , now 4800
+When setting value to non-zero to zero value
+It still takes gas to access cold storage and write/read, so the whole action won’t  just refund us gas, but most likely to reduce the overall gas for this action
+
+1 Deleting an array or setting many values to zero could be very expensive (20% rule)
+2 Setting up one var to 0 is okay, but multiple is it not, cuz the costs goes is like setting to non-zero 3 to non-zero (20% rule) , cannot capture the whole refund 
+4 For every 0 operation try to spend 24k gas elsewhere (txn cost, or setting zero to non-zero) to get multiple refunds
+5 Counting down is more efficient than counting up
+
+
+ERC20 Transfers
+______________
+
+Same function has different gas, cuz:
+Some values we are setting from 0 to non-zero (expensive ~22k)
+Other from non-zero to non-zero (normal ~5k)
+From non-zero to 0 - refund (~200)
+
+
+Struct Storage
+_____________
+
+For each value of the structure we have normal 5k or 22k (depending on non-zero to zero or the opposite) and 100 If it is the same value
+
+If we have long string more than 32 bytes it will take more storage places and the length
+If we have address and after that a bool, it will be saved in one storage slot “cuz both are under 32 bytes”
+
+
+Packing Variables
+_______________
+
+When using multiple variables less then 32 bytes that can fit in one slot, we have all of them in the slot and if we access the slot we see weird value, but if we access it with the “Offset” we get the value we need. Each value is stored in the storage then in offset.
+If we save both values in same slot and we access/change then in different places it will be more expensive, cuz we access storage slot then access the offset
+If we access then and change them in one place or structure then it will be more efficient and makes logic to save them in one slot and writing one slot only
+
+Variables
+__________
+
+Constants safe gas (cost less then non constants), also immunatiable! Cuz they become part of the code on deplyment and do not change!
+
+
+Memory
+_______
+
+The 1st 64 bytes are for scratch space hashing methods 
+Memory slots - 32 bytes
+Every time we expand the memory by 32 bytes we pay 3 gas (if we try to access a memory location it does 3 gas for each previous slot when accessing it)
+
+Calldata is cheaper but cannot be changed - they are ready only
+Memory saves the value in the memory and an modify it, but it is more expensive 
+Memory is cheaper then using calldata and then saving the data from calldata to memory 
+
+The more memory we allocate the more expensive it gets, if we hit a + [a2/512]
+Then the gas cost will start being more and more expensive and if we use too much memory, it might not fit the block and it will revert
+
+
+Solidity does not delete memory when deleted,
+So when we use long array and then get data and we no longer need to use the array and want to use another var , it will just use more memory but not clear the old one.
+Be carful with allocating memory again and again, cuz it could hit the “Quadratic portion” of the formula and become super expensive.
+
+If you wanna reuse memory you can manly do it with YUI 
+
+
+Solidity tricks
+_____________
+
+_Names_
+Compiler check the selected function by the function selector and if it is the correct it execute it
+From smaller to bigger (selector)
+A functions that we use frequently would be good to be with names, so the selectors are on the top for the compiler
+
+_<=>!_
+< and > are more efficient then <= or =>
+X < 3 better than x <= 2
+== / != better than > <
+
+_Shifting_
+When multiplying and dividing, the compiler is shifting the bits
+If we shift them we save 2 gas for multiply and 5 gas for divide
+But we can overflow a multiply shifting and we need extra check after that
+
+_Revert_
+If we have all the revert statements before any main logic executes we can save a lot of gas, especially when we write on storage. 
+However it is best practice to make functions gas efficient for success, not revert. And be sure the logic is correct
+
+_&& ||_
+- When having an && / || operations it is good practice to put the most gas efficient logic 1st, so it will have higher chance to skip the second one that is more costly.
+- Be aware that is a good practice to put 1st the one that is most likely to fail to avoid the second one that will rarely fail. 
+*Decide based on both 
