@@ -62,24 +62,58 @@ Constant Var and Immutable Vars that are set into the constructor are not saved 
 Immutable can be only set in the Constructor!!!! And it stays as part of the code so each clone will have the same value!
 
 
- - - - Beacon Proxy - - - 
+ - - - Eternal Storage - - - 
 
-We can upgrade all implementations in one function
-Using a beacon is a smart way for creating implementation and upgrading it. Since the proxies do not hold the address of the implementation, but they have reference to the beacon, when we change the beacon, all proxies will use the new logic in one transaction
+1 - Eternal storage - contract delegated to hold all the data, and a logic contract. 
+(Separate logic and data to 2 parts, so if we upgrade the logic we keep the data the same)
+Could have multiple logic contracts.
+Users can interact with the logic contracts OR we have a router for interacting and calling the functions and logic contracts. So the router will know the last upgrade of all contracts!
+Example: GMX-synthetic-v2 codebase?
 
 
  - - - Transparent proxy - - - 
 
 Proxy that has the upgrade function: 
-If called by admin (proxy admin contract that also deploys) the call will upgrade, if not, it will delegate-call
-It is very expensive - every time we check if the caller is admin, check storage vars
+If called by admin (proxy admin contract that also deploys) the call will upgrade, if not, it will delegate-call.
+Problems:
+Storage collusion - adding new var in between the others will override a slot in the wrong var to the proxy
+Function selector clashing - when writing in on contract solidity checks for selectors collusion, but since we talk between 2 different contracts, 
+a common functions like “add” could have same selector and we could it, not the _fallback!
+It is very expensive - every time we check if the caller is admin, check storage vars.
+Admin cannot use delegatecall.
 
 
  - - - UUPS proxy - - -  
 
-Тhe upgrade function is in the implementation
-Implementation can upstage all Proxies with the upgrade function
-We can customise authorisation here
-But: Add more complexity and vulnerability risk
-If we forget to add the upgrade function in the new implementation, we will never be able to upgrade it
-Also each new implementation will cost more, because of the upgrade function
+Тhe upgrade function is in the implementation.
+Implementation can upstage all Proxies with the upgrade function.
+We can customise authorisation here!
+No admin unessessary admin checks.
+Problems: 
+Add more complexity and vulnerability risk.
+If we forget to add the upgrade function in the new implementation, we will never be able to upgrade it.
+Also each new implementation will cost more, because of the upgrade function.
+
+
+ - - - Beacon Proxy - - - 
+
+Using a beacon is a smart way for creating implementation and upgrading it. Since the proxies do not hold the address of the implementation, 
+but they have reference to the beacon, when we change the beacon, all proxies will use the new logic in one transaction!
+Upgrade all proxy beacons into one transaction.
+It does not store the implementation address, it stores the beacon.
+The beacon tells proxies what the implementation is.
+No admin unessessary admin checks.
+Problem: 
+With a lot of versions and beacon proxies, when we upgrade we can make mistakes on storage slots and so on, we need to track the versions and adds complexity!
+
+
+ - - - Diamand - - - 
+
+Mapping - For this function selector we have implementation address and delegate call.
+It is like a router who says which selector to which implementation it delegate calls.
+We can also upgrade the implementations for each function.
+Faucet - represents an implementation (mapping & function).
+Problems:
+Complex, sounds simple, but have a lot of rules, naming convictions, storage collusion, and so on.
+
+__________________________________________________________________________________________________
