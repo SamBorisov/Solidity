@@ -41,3 +41,10 @@ initializer modifier idea is to be in the child component only
 for all parents, we should call the modifier onlyInitializing
 reinitializer - update the version of the contract
 We can add a constructor/function that has _disableInitializers - so we can be sure the contract won't have other versions 
+
+
+  - ERC2771 - meta transactions
+For a contract to use meta transactions, it needs to implmenate the logic in the deplayment or be upgradable!
+
+  - ERC4337 - account abstraction
+Stadnart for UserOperation, that contains all the information needed to figure out what transaction the user intends to perform

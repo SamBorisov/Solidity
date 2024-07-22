@@ -1,0 +1,168 @@
+
+
+---------- Meta Transactions (ERC-2771) ---------- :
+
+The idea of Meta Transactions is simple: a third party, called a Relayer, sends the transaction on behalf of the user and pays for the gas fees.
+Users sign messages (preferably EIP-712 compliant) which have information about the transaction to be executed.
+The signed message is passed to the Relayer who is then responsible to validate whether the Relayer will get paid or not (this could be optional more on this later),
+ have enough funds to pay for gas fees, sign a native transaction and submit it for execution.
+
+
+POST: 
+{
+    types: {
+        EIP712Domain: [ [Object], [Object], [Object], [Object] ],
+        ForwardRequest: [ [Object], [Object], [Object], [Object], [Object], [Object] ]
+    },
+    domain: {
+        name: 'MinimalForwarder', version: '0.0.1', chainId: 31337, verifyingContract: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+    },
+    primaryType: 'ForwardRequest',
+    message: {
+        value: 0, gas: 1000000, nonce: '0',
+        from: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8' ,
+        to: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+        data: 0x94d008f0000000000000000000000007099797051812d3a010c7d01b500d17d79c:
+        000000000000000000000000000000000000'
+    }
+}
+
+Transaction:
+{
+    "signature":
+    "0xdb00fb669f352e16308d68c1eb7ab017861e9b8eceb274e757a4f6c5d876474e46647282e8d6be18558a1b727336111554d715ae4741bf9a4e4a2d534
+    7f3071c1c"
+    "request":
+    {
+        "value": 0,
+        "gas": 1000000,
+        "nonce": "1",
+        "to": "0x8355A07848fCF0A3ad193A3131809b555ed23E50" ,
+        "from": "0x22ae7Cf4cD59773f058B685a7e6B7E0984C54966",
+        "data":
+        "0x94d008ef00000000000000000000000022ae7cf4cd59773f058b685a7e6b7e09845496600000000000000000000000000000 00000000000000
+        00000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000
+        000000000000000000000000"
+    }
+}
+
+
+Code:
+struct ForwardRequest {
+    address from;
+    address to;
+    uint256 value;
+    uint256 gas;
+    uint256 nonce;
+    bytes data;
+}
+
+function verify(ForwardRequest calldata req, bytes calldata signature) public view returns (bool) {
+
+    address signer = _hashTypedDataV4(
+        keccak256(
+            abi.encode(
+                _TYPEHASH,
+                req.from,
+                req.to,
+                req.value,
+                req.gas,
+                req.nonce,
+                keccak256(req.data)
+            )
+        )
+    ).recover(signature);
+
+    return _nonces[req.from] == req.nonce &amp;&amp; signer == req.from;
+}
+
+function execute(ForwardRequest calldata req, bytes calldata signature)
+        public
+        payable
+        returns (bool, bytes memory)
+{
+    require(verify(req, signature), "MinimalForwarder: signature does not match request");
+    _nonces[req.from] = req.nonce + 1;
+
+    (bool success, bytes memory returndata) = req.to.call{gas: req.gas, value: req.value}(abi.encodePacked(req.data, req.from));
+
+    // Validate that the relayer has sent enough gas for the call.
+    // See 
+    if (gasleft() <= req.gas / 63) {
+        // We explicitly trigger invalid opcode to consume all gas and bubble-up the effects, since
+        // neither revert or assert consume all gas since Solidity 0.8.0
+        // 
+        /// @solidity memory-safe-assembly
+        assembly {
+            invalid()
+        }
+    }
+
+    return (success, returndata);
+}
+
+
+Standart:
+contract YourContract is ERC2771Context {
+    constructor(MinimalForwarder forwarder, string memory uri_)
+        ERC2771Context(address(forwarder))
+    {}
+
+    // Depending on whether the call is made by the `MinimalForwarder` or not the `msg.sender` and `msg.data` will be inferred accordingly
+
+}
+
+
+Disadvantages of Meta Transactions:
+
+Backward Compatability: 
+A major challenge of the protocol outlined in the ERC-2771 standard is that it requires smart contracts to be written so they support meta transactions. 
+This is a manageable issue for new contracts. However, it would require updates to all existing contracts that also want to adopt meta transactions. 
+
+Security: 
+Another critical challenge of ERC-2771 is to ensure the security of the meta-transaction protocol. 
+Each meta transaction contains a msg.sender parameter to determine who signed the transaction. 
+However, a malicious ”forwarder” can forge this value and effectively send transactions from any address. 
+Consequently, the ”recipient” contract must be careful when trusting forwarders. This is essential to prevent unauthorized use of meta transactions and prevent relay attacks. 
+
+
+
+---------- Account Abstraction (ERC-4337) ---------- :
+
+In the case of Meta Transactions, the industry standard was to use EIP712-based messages, which required all smart contracts to be upgraded. 
+
+Account Abstraction standardizes a special transaction format called UserOperations.
+
+UserOperation contains all the information needed to figure out what transaction the user intends to perform,
+including fields to decide which Paymaster to use, how much the user is willing to pay (in case of self-sponsorship), and the signed UserOperation.
+
+UserOperation (UserOperation is a special transaction format that contains all the information needed to figure out what transaction the user intends to perform)
+
+1 - User accounts (user account)
+2 - Bundler account (account that bundles transactions, check if they are possible, see if the paymaster would pay for it and then send it to the network)
+3 - Entry Point (the contract that will be called)
+4 - Paymaster (the contract that will pay for the transaction)
+5 - Smart Conatrct Account (a contract that handle account abstraction)
+
+Instead of having only one transaction inside a native transaction in the case of Meta Transaction, Bundlers bundle multiple UserOperations into one bundle (one native transaction)!
+
+
+Benefits of Account Abstraction over Meta Transactions:
+
+1. No Smart Contract Changes are Required
+While Meta Transactions require updates to all existing contracts that would adopt them, Account Abstraction builds on existing infrastructure. 
+This means that all smart contracts by default support Account Abstraction, which makes it a preferred option over Meta Transactions.
+
+2. Frictionless Switching Between Bundler and Paymaster Services
+Under ERC-4337, all Bundlers and Paymasters communicate following specific standards. Teams can even create their own Paymasters with conditional logic for their application.
+
+3. No Need to Adopt Proprietary Relayers
+Proprietary Relayers lack consistency; each Relayer can have their own message format for their use case. This leads to smart contract changes being required to become compatible with each different Relayer.
+
+4. More Decentralization
+As more providers make their Bundler services available, the developer gains the ability to decentralize their transaction flow. This also affords the developer the opportunity to abandon any sub-par Bundlers. 
+
+5. No Developer Tooling Lock-in
+When using Meta Transactions you also need to use the Infra provider’s SDK. This leads to tooling lock-in that adds to the friction when migrating Relayers.
+In the case of Account Abstraction, all the standard functionality is supported by all SDKs allowing one to select based on their expertise and switch based on preference!
+Moreover, since the UserOperation standard is to be adopted by every vendor, building tools like UserOperation Explorers is also feasible.
