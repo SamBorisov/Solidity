@@ -1,3 +1,33 @@
+---------- BLS signature ---------- :
+
+Bls signature, does not have {r, s} values like ECDSA, it has only one value called signature.
+The signature is a 96-byte value that is the result of the BLS signature algorithm.
+The signature is a point on the BLS12-381 curve, which is a 48-byte value.
+The signature is then encoded as a 96-byte value by concatenating the x and y coordinates of the point.
+We can create multiple signatures and aggregate them into a single signature.
+It is more efficient than ECDSA because it can aggregate multiple signatures into a single signature.
+
+Problem:
+BLS signature aggriagtion is not secure against rogue keys.
+Defending against rogue keys:
+1- Require unique messages [BGLS03]:
+But: no fast multi-sig verification.
+2- Message augmentation [BGLS03,BNN07]:
+Sign pk|| msg, ensuring uniqueness (so: no fast multi-sig verification).
+3- Proof of possession [Bol03,LOSSW06,RY07]:
+Require key owners to furnish Sign(sk, pk) (gives fast multi-sig verification).
+4- Random linear combination [BDN18]:
+Check e(H(msgi), Пi pki^ai) ?= e(Пi; sigi^ai , P2)
+for pseudorandomly-generated (ai).
+
+
+---------- Multi-Sig Wallet ---------- :
+
+Exmaple:
+1 - submit a transaction.
+2 - approve and revoke approval of pending transactions.
+3 - anyone can execute a transaction after enough owners has approved it.
+https://solidity-by-example.org/app/multi-sig-wallet/
 
 
 ---------- Meta Transactions (ERC-2771) ---------- :
@@ -124,7 +154,6 @@ Another critical challenge of ERC-2771 is to ensure the security of the meta-tra
 Each meta transaction contains a msg.sender parameter to determine who signed the transaction. 
 However, a malicious ”forwarder” can forge this value and effectively send transactions from any address. 
 Consequently, the ”recipient” contract must be careful when trusting forwarders. This is essential to prevent unauthorized use of meta transactions and prevent relay attacks. 
-
 
 
 ---------- Account Abstraction (ERC-4337) ---------- :

@@ -1,5 +1,4 @@
 
-
 ______________________ Upgradability Types ______________________
 
 1 - Parametrise - state variables could be changed in function in a way that affects rewards or given things 
@@ -59,3 +58,10 @@ If there is a repeating contract, it is good to import in the next level and _in
 
 The less init we do, the more gas we save!
 _________________________________________
+
+
+_______ Functions Override _______
+
+If we have a functionality, where we need a variable from the child, but the function does not make sance to be fully in the child:
+1- Make parent function that is empty and is virtual , could be overridden!
+2- In child make function with same name that overrides the original and uses the needed variables of the child!
