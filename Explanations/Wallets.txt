@@ -175,6 +175,12 @@ UserOperation (UserOperation is a special transaction format that contains all t
 
 Instead of having only one transaction inside a native transaction in the case of Meta Transaction, Bundlers bundle multiple UserOperations into one bundle (one native transaction)!
 
+- We can sight data using for example Google or any way to sign the UserOperation and send it to the Bundler, which will then send it to the network.
+- Then it goes to Alt-mempool nodes, that will check if the transaction is valid and if the Paymaster will pay for it, and then send it to the network. (or the wallet contract if there is no pay master)
+- We can also add a Signature Aggregator, where we can use multiple signatures to sign the UserOperation and send it to the Bundler.
+- After that it will go to the Enrty point contract and fire a transaction to the wallet contrac.
+(If we use synchNotes) we do not need to interact through the Alt-mempool nodes, but we can send the transaction directly to the network.
+Becouse all wallets in synchNotes are smart contracts already, and we can create one the way we want.
 
 Benefits of Account Abstraction over Meta Transactions:
 
