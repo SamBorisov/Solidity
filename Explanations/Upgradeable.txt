@@ -66,3 +66,13 @@ If we have a functionality, where we need a variable from the child, but the fun
 1- Make parent function that is empty and is virtual , could be overridden!
 2- In child make function with same name that overrides the original and uses the needed variables of the child!
 3- Specify in the child function from which contract it overrides the function, to be sure that it is the right one! "override(contractName)", could be multiple contracts!
+4- If we want to call the parent function in the child function, we can use "super.functionName()" to call the parent function! (function should have a logic before that)
+5- If we have a child with multiple parents that override the same function, to use both correctly, we need to say "contractName.functionName()", when overriding the function in the child! and specify "override(contractName, otherContract)" in the child function!
+
+_______ Grapth Tree _______
+
+1 - make sure the the conatrcts are in the right order, so the parent is always before the child
+2 - interfaces should be at the top of the tree
+3 - a child contract shound not be a parent of the parent contract
+4 - no dublicate interfaces or functions
+...
