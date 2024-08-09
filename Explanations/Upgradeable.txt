@@ -1,9 +1,9 @@
 
-______________________ Upgradability Types ______________________
+______________________ Upgradeability Types ______________________
 
-1 - Parametrise - state variables could be changed in function in a way that affects rewards or given things 
+1 - Parametrize - state variables could be changed in function in a way that affects rewards or given things 
 2 - Migration - creating a new contract and telling people this is the new contract, they should use it
-3 - Proxy - use delegate call to another contract but saves all state variables in the proxy in that way when we upgrade we can deploy a new contract and point the poxy call to go to the new address while keeping all the data. But it is risky.
+3 - Proxy - use delegate call to another contract but saves all state variables in the proxy in that way when we upgrade we can deploy a new contract and point the proxy call to go to the new address while keeping all the data. But it is risky.
 - Storage clashing - we need to be careful with the slots of the stage 
 - Function selector clashing - multiple functions could have the same function selector 
 - (we can set admins to call only admin functions and user-only user functions, but in that way, admins cannot participate),
@@ -33,7 +33,7 @@ _msgSender()  & _msgData - function to be able to change if we want to pay from 
 _______ Functions _______
 
 - Problem, if we upgrade with func to another contract and the storage is different (the position or there are missing things in the storage on the upgraded contract), then we could be bug so functions does not execute well and type in the wrong way! (Slots for storage problem)
-We use here fallback/recieve function to call implementation contract like:
+We use here fallback/receive function to call implementation contract like:
 (Bool ok, bytes memory res) = addressImplement.delegatecall(msg.data)
 Require (ok , “failed”)
 Also fallback function does not return any data!
@@ -46,14 +46,14 @@ Because variables are set when we call the constructor by default, but upgradabl
 Constants do not have this problem, since they do not charge and are part of the code! The constructor does not set them!
 
 
-_______ Initlizing _______
+_______ Initializing _______
 
 Usually, we have to import every init from the contracts we inherited.
 If a contract is inherited only once, it should be imported in the _init of the contract it goes, and this _init should be!
 If one contract is imported in many others, it should be included in the top contract, so it is not initialized multiple times.
 But the problem is that in the contract to init, it needs another contract that is in, and it will init multiple times!
 
-It is good practice to call with _INIT every contract we import in-outs. And call _unchaned only the current contract.
+It is good practice to call with _INIT every contract we import in-outs. And call _unchained only the current contract.
 If there is a repeating contract, it is good to import in the next level and _init it there so it does not _init multiple times!
 
 The less init we do, the more gas we save!
@@ -62,17 +62,17 @@ _________________________________________
 
 _______ Functions Override _______
 
-If we have a functionality, where we need a variable from the child, but the function does not make sance to be fully in the child:
+If we have a functionality, where we need a variable from the child, but the function does not make sense to be fully in the child:
 1- Make parent function that is empty and is virtual , could be overridden!
 2- In child make function with same name that overrides the original and uses the needed variables of the child!
 3- Specify in the child function from which contract it overrides the function, to be sure that it is the right one! "override(contractName)", could be multiple contracts!
 4- If we want to call the parent function in the child function, we can use "super.functionName()" to call the parent function! (function should have a logic before that)
 5- If we have a child with multiple parents that override the same function, to use both correctly, we need to say "contractName.functionName()", when overriding the function in the child! and specify "override(contractName, otherContract)" in the child function!
 
-_______ Grapth Tree _______
+_______ Graph Tree _______
 
-1 - make sure the the conatrcts are in the right order, so the parent is always before the child
+1 - make sure the the contacts are in the right order, so the parent is always before the child
 2 - interfaces should be at the top of the tree
-3 - a child contract shound not be a parent of the parent contract
-4 - no dublicate interfaces or functions
+3 - a child contract should not be a parent of the parent contract
+4 - no duplicate interfaces or functions
 ...
