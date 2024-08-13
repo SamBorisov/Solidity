@@ -48,3 +48,15 @@ For a contract to use meta transactions, it needs to implmenate the logic in the
 
   - ERC4337 - account abstraction
 Stadnart for UserOperation, that contains all the information needed to figure out what transaction the user intends to perform
+
+
+
+Testing:
+
+ - Remix Assert Library (remix_tests.sol)
+Helps to test the contract, to check if the function is working as expected:
+Assert.ok(value[, message])
+Assert.equal(actual, expected[, message])
+Assert.notEqual(actual, expected[, message])
+Assert.greaterThan(value1, value2[, message])
+Assert.lesserThan(value1, value2[, message])
