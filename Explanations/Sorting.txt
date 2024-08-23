@@ -1,0 +1,323 @@
+_______________ Sorting _______________
+
+1 - Bubble Sort
+Bubble sort is a simple yet effective sorting algorithm that can be seamlessly implemented in Solidity.
+Sorts it in ascending order, and returns the sorted array.
+
+
+function bubbleSort(uint[] memory arr) public pure returns (uint[] memory) {
+ uint n = arr.length;
+    for (uint i = 0; i < n - 1; i++) {
+        for (uint j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+            (arr[j], arr[j + 1]) = (arr[j + 1], arr[j]);
+            }
+        }
+    }
+ return arr;
+}
+
+_Limitations: 
+Bubble sort is generally inefficient for large datasets due to its quadratic time complexity.
+!Data type: Smaller data types (e.g., uint8) will have less memory overhead than larger ones (e.g., uint256).
+
+
+2 - Quick Sort
+Quick sort is a popular sorting algorithm that uses a divide-and-conquer strategy to sort elements efficiently.
+Sorts it in ascending order, and returns the sorted array.
+
+function quickSort(uint[] memory arr) public pure returns (uint[] memory) {
+    if (arr.length <= 1) return arr;
+    uint pivot = arr[arr.length / 2];
+    uint[] memory left;
+    uint[] memory right;
+    
+    for (uint i = 0; i < arr.length; i++) {
+        if (arr[i] < pivot) {
+        left.push(arr[i]);
+        }
+        if (arr[i] > pivot) {
+        right.push(arr[i]);
+        }
+    }
+ 
+ return concat(quickSort(left), pivot, quickSort(right));
+}
+
+_Limitations:
+Large Arrays: Sorting large arrays might result in exceeding the block gas limit, making the transaction fail.
+Recursive Depth: Solidity has a limit on the depth of recursion, which can cause issues if the array size is very large.
+Concatenate function is not defined by default, so it should be implemented separately.
+
+
+3 - Merge Sort
+Merge sort is a stable sorting algorithm that divides the array into two halves, sorts them, and then merges them back together.
+Sorts it in ascending order, and returns the sorted array.
+
+function mergeSort(uint[] memory arr) public pure returns (uint[] memory) {
+ if (arr.length <= 1) return arr;
+ uint middle = arr.length / 2;
+ uint[] memory left = new uint[](middle);
+ uint[] memory right = new uint[](arr.length - middle);
+ 
+    for (uint i = 0; i < middle; i++) {
+    left[i] = arr[i];
+    }
+    for (uint i = middle; i < arr.length; i++) {
+    right[i - middle] = arr[i];
+    }
+ 
+ return merge(mergeSort(left), mergeSort(right));
+}
+
+_Limitations:
+Large Arrays: Sorting large arrays might result in exceeding the block gas limit, making the transaction fail.
+Memory Allocation: Merge sort requires additional memory for the left and right arrays, which can be costly for large arrays.
+Merge function is not defined by default, so it should be implemented separately.
+
+
+
+
+
+--------EXAMPLE--------:
+
+struct ValidatorPrice {
+    address validator;
+    uint256 price;
+}
+
+We want to sort an array of ValidatorPrice structs based on the price field.
+___________
+Bubble Sort:
+            for (uint256 i = 0; i < len - 1; i++) {
+                for (uint256 j = i + 1; j < len; j++) {
+                    if (prices[i].price > prices[j].price) {
+                        ValidatorPrice memory temp = prices[i];
+                        prices[i] = prices[j];
+                        prices[j] = temp;
+                    }
+                }
+            }
+
+Good for small arrays, but overall inefficient.
+
+__________
+Quick Sort:
+    quickSort(prices, int(0), int(len - 1));
+
+    function quickSort(ValidatorPrice[] memory arr, int left, int right) internal pure {
+        int i = left;
+        int j = right;
+        if (i == j) return;
+        uint256 pivot = arr[uint(left + (right - left) / 2)].price;
+        while (i <= j) {
+            while (arr[uint(i)].price < pivot) i++;
+            while (pivot < arr[uint(j)].price) j--;
+            if (i <= j) {
+                (arr[uint(i)], arr[uint(j)]) = (arr[uint(j)], arr[uint(i)]);
+                i++;
+                j--;
+            }
+        }
+        if (left < j) quickSort(arr, left, j);
+        if (i < right) quickSort(arr, i, right);
+    }
+
+Best and most efficient, also fastest.
+
+__________
+Megre Sort:
+
+ function mergeSort(ValidatorPrice[] memory arr) internal pure returns (ValidatorPrice[] memory) {
+        if (arr.length <= 1) {
+            return arr;
+        }
+
+        uint256 mid = arr.length / 2;
+        ValidatorPrice[] memory left = new ValidatorPrice[](mid);
+        ValidatorPrice[] memory right = new ValidatorPrice[](arr.length - mid);
+
+        for (uint256 i = 0; i < mid; i++) {
+            left[i] = arr[i];
+        }
+        for (uint256 i = mid; i < arr.length; i++) {
+            right[i - mid] = arr[i];
+        }
+
+        return merge(mergeSort(left), mergeSort(right));
+    }
+
+    function merge(
+        ValidatorPrice[] memory left,
+        ValidatorPrice[] memory right
+    ) internal pure returns (ValidatorPrice[] memory) {
+        ValidatorPrice[] memory result = new ValidatorPrice[](left.length + right.length);
+        uint256 i = 0;
+        uint256 j = 0;
+        uint256 k = 0;
+
+        while (i < left.length && j < right.length) {
+            if (left[i].price <= right[j].price) {
+                result[k] = left[i];
+                i++;
+            } else {
+                result[k] = right[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < left.length) {
+            result[k] = left[i];
+            i++;
+            k++;
+        }
+
+        while (j < right.length) {
+            result[k] = right[j];
+            j++;
+            k++;
+        }
+
+        return result;
+    }
+
+Better than Bubble Sort, but not as good as Quick Sort.
+
+
+_______________ Listing _______________
+
+Creating already sorted lists, and inserting new elements into them.
+We can use a linked list to keep the list sorted, and insert new elements in the correct position.
+We use mappings to store the nodes and the head of the list, and a struct for the nodes.
+Using sorted list is quite efficient for getting the data, or individual elements, but not for updating or deleting them.
+
+We can add function to delete elemets, increase, decrease and update the the price of the element, and also double linked list that keep the previous element as well!
+Example repos:
+https://gist.github.com/taobun/198cb6b2d620f687cacf665a791375cc
+https://github.com/vittominacori/solidity-linked-list/blob/master/contracts/StructuredLinkedList.sol
+https://github.com/HQ20/contracts/blob/master/contracts/lists/DoubleLinkedList.sol
+
+library SortedList {
+    struct Node {
+        uint256 price;
+        address next;
+    }
+
+    struct List {
+        mapping(address => Node) nodes;
+        address head;
+        uint256 size;
+    }
+
+    /**
+     * @notice Inserts a new validator with a price in the sorted list
+     * @param self The list to insert the validator in
+     * @param validator The validator to insert
+     * @param price The price to insert
+     * @dev The list is sorted in ascending order
+     */
+    function insert(List storage self, address validator, uint256 price) internal {
+        assert(price != 0);
+        assert(validator != address(0));
+        assert(self.nodes[validator].price == 0);
+
+        // Create a new node
+        Node memory newNode = Node(price, address(0));
+
+        // If the new price is smaller or equal to the head, insert at the head (or if the list is empty)
+        if (self.nodes[self.head].price >= price || self.size == 0) {
+            newNode.next = self.head;
+            self.head = validator;
+            self.nodes[validator] = newNode;
+            self.size++;
+            return;
+        }
+
+        // Find the correct spot to insert the new node
+        address current = self.head;
+        while (self.nodes[current].next != address(0) && price > self.nodes[self.nodes[current].next].price) {
+            current = self.nodes[current].next;
+        }
+
+        // Insert the new node
+        newNode.next = self.nodes[current].next;
+        self.nodes[current].next = validator;
+        self.nodes[validator] = newNode;
+        self.size++;
+    }
+}
+
+_______________ Gas Report _______________
+
+Calling a functuon that need to go over each price and validator with different sorting methods:
+
+	MIN  ·     MAX  ·     AVR 	
+
+------------------------------
+Mixed test with up to 5 votes:	
+
+List:
+ 95 986  ·     272 047  ·     139 511
+
+BubbleSort:
+93 255  ·     278 405  ·     139 797
+
+QuickSort:
+93 255  ·     278 320  ·     139 837
+
+MergeSort:
+ 93 255  ·     285 894  ·     142 016
+
+------------------------------
+Test with up to 100 votes - one price all:
+
+List:
+112 949  ·     967 120  ·     482 751
+
+BubbleSort:
+110 355  ·    2 100 511  ·     863 438
+
+QuickSort:
+110 355  ·    1 216 928  ·     589 321
+
+MergeSort:
+ 110 355  ·    1 667 102  ·     785 242
+
+------------------------------
+Test with up to 100 votes - different prices:
+
+List:
+112 738  ·    1 008 425  ·     505 567 
+
+BubbleSort:
+110 379  ·    2 584 680  ·    1 047 183
+
+QuickSort:
+110 379  ·    1 212 984  ·     599 368 
+
+MergeSort:
+110 379  ·    1 675 734  ·     805 349
+
+____________________________________________
+
+Creating a custom list that creats a groups of validators with the similar price, so we do not need to sort or connect each validator with _next.
+We can save the groups into an array and check if validaor is fitting to a group then updated the counter of the group, needed priceSum and push his address!
+This could create vert efficient way to get the data!
+!But not so sutable to update or delete the data. Or track each validator. (if he already voted or not and what is the price)
+
+struct PriceGroup {
+    uint256 sumPrice;
+    uint256 count;
+    address[] validators;
+}
+
+price group = sumPrice / count, if validator price ~ price group, add to the group (add to the sum and count), if not create a new group.
+
+Mixed test with up to 5 votes:	
+84 513  ·     308 106  ·     148 746
+
+Test with up to 100 votes - different prices:
+101 637  ·     748 332  ·     371 216
+
+____________________________________________

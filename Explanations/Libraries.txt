@@ -1,5 +1,7 @@
-Libraries and how to use them
+Libraries and how to use them:
+https://forum.openzeppelin.com/t/list-of-solidity-libraries-in-the-wild/2250
 
+                  Stadnarts:
 - Tokens:
   - ERC20 - Normal token that's tradable, not unique
   - ERC721 - Special token that's tradable, unique (NFT)

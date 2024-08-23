@@ -147,6 +147,12 @@ So if we make a structure that has: bytes8 (we do not divide), unit 160 (160/8) 
 We can out code in the function from modifier between lines
 ^Epoch root - like unique hash for epoch
 
+^try {} catch {} - to catch errors in the code
+It does not revert the transaction, but it will catch the error and continue the code.
+If we want to revert we need to do it manually.
+It is good for external calls, if we want to catch the error and continue the code, and not to revert the transaction.
+If the gas is not enough for the call in the try block it won't catch the error, but it will revert the transaction.
+
 ////////// Transient stage ///////////
 Data is cleared only after a transaction (not after a function like memory)
 Using assembly we can sore in a slot and tstore(SLOT, data)
