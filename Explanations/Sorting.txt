@@ -308,16 +308,15 @@ This could create vert efficient way to get the data!
 
 struct PriceGroup {
     uint256 sumPrice;
-    uint256 count;
-    address[] validators;
+    address[] validators; // count is validators.length
 }
 
 price group = sumPrice / count, if validator price ~ price group, add to the group (add to the sum and count), if not create a new group.
 
 Mixed test with up to 5 votes:	
-84 513  ·     308 106  ·     148 746
+79 299  ·     283 736  ·     138 956
 
 Test with up to 100 votes - different prices:
-101 637  ·     748 332  ·     371 216
+96 423  ·     743 012  ·     365 816
 
 ____________________________________________

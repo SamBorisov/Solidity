@@ -1,6 +1,7 @@
 Notes from: 
 https://www.youtube.com/playlist?list=PLO5VPQH6OWdVQwpQfw9rZ67O6Pjfo6q-p
 https://solidity-by-example.org/
+and other sources (metioned in README.md)
 
 :
 We can log things with custom error (msg sender…)
@@ -159,5 +160,6 @@ Using assembly we can sore in a slot and tstore(SLOT, data)
 It is used to save gas 
 Remix VN Cancun + EVM VERSION - cancun
 
-
-
+^Stack too deep:
+If in a function we have too many variables (16-17+) we will get an error stack too deep.
+To fix it we can make a struct and put all the variables in it, and then use the struct in the function.
