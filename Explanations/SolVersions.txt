@@ -2,7 +2,8 @@ Major Updates (8.0+)
 8.3
 - Keccack256 inline assembly bug fixed
 8.4
-- Abi.decode bug fixed  + custom errors
+- Abi.decode bug fixed  
+- custom errors added
 8.5
 - Convert bytes/bytes slices to fixed bytes types + Verbatim in Yul
 8.6
