@@ -1,0 +1,88 @@
+Major Updates (8.0+)
+8.3
+- Keccack256 inline assembly bug fixed
+8.4
+- Abi.decode bug fixed  + custom errors
+8.5
+- Convert bytes/bytes slices to fixed bytes types + Verbatim in Yul
+8.6
+- Fix incorrectly reported unreachable code 
+- Solc-Js fix 
+- Yul Metadata object
+8.7
+- BASEFEE support 
+- SMTChecker updates
+8.8
+- struct Price { uint128 price; } - > type Price is uint128; (less gas) - using types for var
+- A function that overrides only a single interface function does not require the override specifier. 
+- min(1st) and max(last) for Enums 
+- Immutable variables can be read at construction time once they are initialized.
+8.9
+- Fix bug for types less then 32 bytes and immutables of signed integers shorter then 256 bits
+8.10
+- Inline Assembly: Support .address and .selector on external function pointers to access their address and function selector.
+8.11
+- Language Server Preview + abi.encodeCall
+8.12
+- Add equality-comparison operators for external function types.
+- Support ContractName.functionName for abi.encodeCall, in addition to external function pointers.
+8.13
+- When abi.encodeCall was introduced in Solidity 0.8.11, hex literals (0x1234) and string literals ("abcd") were not handled properly. Please read more about it in the security alert.  
+Memory-Safe Assembly / Stack Too Deep
+8.14
+- ABI Encoder: When ABI-encoding values from calldata that contain nested arrays, correctly validate the nested array length against calldatasize() in all cases.
+- Override Checker: Allow changing data location for parameters only when overriding external functions.
+8.15
+- .selector for functions, 
+- memory write operations in inline assembly(8.13 , 8,14) - bug fix
+- .push() operation on a bytes array in storage appending bytes that are not properly zero-initialized if the array was originally copied from memory or calldata.
+8.16
+- Fix data corruption that affected ABI-encoding of calldata values represented by tuples: structs at any nesting level; argument lists of external functions, events and errors; return value lists of external functions. 
+The 32 leading bytes of the first dynamically-encoded value in the tuple would get zeroed when the last component contained a statically-encoded array.
+8.17
+- Yul Optimizer: Prevent the incorrect removal of storage writes before calls to Yul functions that conditionally terminate the external EVM call.
+8.18
+- Disabling CBOR metadata
+- block.difficulty - > block.prevrandao
+- Deprecation of selfdestruct
+- Allow named parameters in mapping types.
+8.19
+- Small improvements and bug fixes, assembly duplication and more.
+8.20
+- Set default EVM version to "Shanghai".
+- Experimental AST import via Standard JSON
+- NatSpec for Enum and Structs + events that are edited
+- Disallow initialization of immutables in try/catch statements.
+8.21
+- Allow qualified access to events from other contracts.
+- Relax restrictions on initialization - default would be 0, in for loop / try catch if not reach initiazliation.
+- Yul optimiser bug fix & code generator with expressions.
+8.22
+- Unchecked loop increments (to save gas, without using unchecked word)
+- Allowing event definitions at file level
+- Adjusting Yul optimizer to rematerialize zero literals
+- Adding support for importing EVM Assembly JSON (experimental)
+8.23
+- Fixing the invalid verbatim deduplication bug (through Yul, from 8.5)
+8.24
+- Cancun Network Upgrade:
+- This EIP implements this change. Applications that only use SELFDESTRUCT to retrieve funds will still work. Applications that only use SELFDESTRUCT in the same transaction as they created a contract will also continue to work without any changes.
+- use --evm-version cancun (as at lunch it was no deployed on the main net)
+- Transient Storage (EIP-1153) - storage that works only for the current transaction
+- Shard Blob Transactions (EIP-4844)
+- An Efficient EVM Instruction for Copying Memory Areas (EIP-5656) - mcopty()
+- Support for Apple Silicon + block.blobbasefee + blobhash(uint)
+8.25
+- Dencun Upgrade
+- With Dencun now live on mainnet, we are accordingly making cancun the default EVM version the compiler will emit code for.
+- MCOPY in code generator - Code Generator: Use MCOPY instead of MLOAD/MSTORE loop when copying byte arrays.
+- Yul Analyzer: Emit transient storage warning only for the first occurrence of tstore.
+8.26
+- Custom errors support in require!!!!
+- Note that currently, using custom errors with require is only supported by the IR pipeline, i.e. compilation via Yul. For the legacy pipeline, please use the if (!condition) revert CustomError(); pattern instead.
+- Optimization for reverts with errors of small static encoding size
+- New, faster Yul Optimizer sequence
+- Replacement of the internal JSON library.
+8.27
+- Legacy Support for require with Custom Errors + error signature (not string) on revert
+- The compiler will now accept the syntax for marking some variables as transient and let users generate transient storage layout. However, it is still not possible to generate bytecode for contracts using such variables.
