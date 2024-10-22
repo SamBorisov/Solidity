@@ -32,7 +32,7 @@ remixd
 
 1 - connect to localhost <br>
 2 - right-click to the file you want to verify and click "Flatten" <br>
-3 - use the \_flattened.sol file for verifying <br>
+3 - use the _flattened.sol file for verifying <br>
 
 Verify info:
 
